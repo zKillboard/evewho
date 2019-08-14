@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    height: 100px; /* .push must be the same height as .footer */
+}
+.footer {
+}
+
+.tiny { 
+    font-size: 1%;
+}
+
+.count, .delta {
+    text-align: right;
+}
+
+.delta-table tbody tr td.image {
+    width: 32px;
+}
+.delta-table tbody tr td.name {
+    width: 318px;
+}
+.delta-table tbody tr td.count {
+    width: 90px;
+}
+.delta-table tbody tr td.delta {
+    width: 60px;
+}

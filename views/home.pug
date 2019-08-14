@@ -1,0 +1,19 @@
+extends layout
+include delta.pug
+
+block content
+    div.row
+        div.col-sm
+          +delta('Largest Independent Corporations', big_corporations, 'Corporation')
+        div.col-sm
+          +delta('Largest Alliances', big_alliances, 'Alliance')
+    div.row
+        div.col-sm
+          +delta('Growing Corporations', growing_corporations, 'Corporation')
+        div.col-sm
+          +delta('Growing Alliances', growing_alliances, 'Alliance')
+    div.row
+        div.col-sm
+          +delta('Shrinking Corporations', shrinking_corporations, 'Corporation')
+        div.col-sm
+          +delta('Shrinking Alliances', shrinking_alliances, 'Alliance')

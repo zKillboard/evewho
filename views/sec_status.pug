@@ -1,0 +1,21 @@
+include image.pug
+
+mixin sec_status(title, contents, type)
+  span.float-left
+    h4= title
+    table.table.table-striped.table-bordered.table-hover.table-sm.delta-table
+      thead.thead-light
+        tr
+          th.image
+          th.name Name
+          th.count Members
+          th.delta Sec.
+      tbody
+        if contents != undefined
+          each val in contents
+            tr
+              td.image 
+                +image(type, val.id)
+              td.name= val.name
+              td.count.number= val.memberCount
+              td.delta.numberd= val.avg_sec_status

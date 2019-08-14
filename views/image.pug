@@ -1,0 +1,5 @@
+mixin image(type, id, size = 32)
+  if type == 'Character'
+    img(src='https://imageserver.eveonline.com/character/' + id + '_' + size + '.jpg')
+  else 
+    img(src='https://imageserver.eveonline.com/' + type + '/' + id + '_' + size + '.png')

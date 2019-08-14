@@ -1,0 +1,29 @@
+div.container
+  nav.navbar.navbar-expand-lg.navbar-light.bg-light.main-nav
+    a.navbar-brand(href='/')
+      img(src='https://image.eveonline.com/Character/1_64.jpg', width='30', height='30', alt='')
+    a.navbar-brand(href='/') EveWho
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    div#navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item.active
+          a.nav-link(href='/')
+            | Home 
+            span.sr-only (current)
+        li.nav-item
+          a.nav-link(href='/pilots/')
+            | Pilots
+        li.nav-item
+          a.nav-link(href='/corps/')
+            | Corporations
+        li.nav-item
+          a.nav-link(href='/alli/')
+            | Alliances
+        li.nav-item
+          a.nav-link(href='/faq/')
+            | FAQ
+      form.form-inline.my-2.my-lg-0
+        input.form-control.mr-sm-2(type='search', placeholder='Hi David', aria-label='Search')
+        button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+
