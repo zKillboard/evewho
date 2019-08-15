@@ -56,6 +56,7 @@ var mysql = new Database({
 	password: 'evewho',
 	database: 'evewho'
 });
+app.mysql = mysql;
 
 //var update_chars = require('./bin/update_chars.js');
 //update_chars(mysql);

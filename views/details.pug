@@ -1,0 +1,36 @@
+include image.pug
+include td.pug
+include tda.pug
+
+mixin details(details, type, id)
+  - var size = 128
+  span.float-left
+    h4= title
+    table.table.table-striped.table-bordered.table-hover.table-sm.delta-table
+      thead.thead-light
+        tr
+          th(colspan=2)
+            if details.character_id != undefined
+              +image('character', details.character_id, size)
+              - size = 64
+            if details.corporation_id != undefined
+              +image('corporation', details.corporation_id, size)
+              - size = 64
+            if details.alliance_id != undefined
+              +image('alliance', details.alliance_id, size)
+      tbody
+        +tda('Corporation', details.corp_name, 'corporation', details.corporation_id)
+        +tda('Alliance', details.alli_name, 'alliance', details.alliance_id)
+        +td('Ticker', details.ticker)
+        +td('Members', details.memberCount, 'number')
+        +td('Diff', details.diff, 'number')
+        +td('Sec.', details.avg_sec_status, 'numberd')
+        +td('Sec.', details.sec_status, 'numberd')
+        +tda('CEO', details.ceo_name, 'character', details.ceoID)
+        +tda('Executor', details.exec_corp_name, 'corporation', details.executor_corp)
+        +td('Corp Count', details.corp_count, 'number')
+        tr
+          td
+          td
+            a(href='https://zkillboard.com/' + type + '/' + id + '/', target= '_blank') zKillboard
+                

@@ -1,0 +1,10 @@
+extends layout
+include delta.pug
+include details.pug
+
+block content
+    div.row
+        div.col-sm
+          +details(details, 'alliance', details.alliance_id)
+        div.col-sm
+          +delta('Corporations', corporations, 'corporation')

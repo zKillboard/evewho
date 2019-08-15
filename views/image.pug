@@ -1,5 +1,6 @@
-mixin image(type, id, size = 32)
-  if type == 'Character'
-    img(data-src='https://imageserver.eveonline.com/character/' + id + '_' + size + '.jpg',width= size,height= size).lazy
-  else 
-    img(data-src='https://imageserver.eveonline.com/' + type + '/' + id + '_' + size + '.png',width= size,height= size).lazy
+mixin image(type, id, size = 32, name)
+  a(href= '/' + type + '/' + id)
+    if type == 'character'
+      img(data-src='https://imageserver.eveonline.com/character/' + id + '_' + size + '.jpg',width= size,height= size).lazy
+    else 
+      img(data-src='https://imageserver.eveonline.com/' + type + '/' + id + '_' + size + '.png',width= size,height= size).lazy

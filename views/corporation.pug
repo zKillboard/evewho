@@ -1,0 +1,10 @@
+extends layout
+include details.pug
+include history.pug
+
+block content
+    div.row
+        div.col-sm
+          +details(details, 'corporation', details.corporation_id)
+        div.col-sm
+          +history('Characters', 'character', characters, true, false)

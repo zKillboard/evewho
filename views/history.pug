@@ -1,6 +1,6 @@
 include image.pug
 
-mixin delta(title, contents, type)
+mixin history(title, type, contents, joined, left)
   span.float-left
     h4= title
     table.table.table-striped.table-bordered.table-hover.table-sm.delta-table
@@ -8,15 +8,19 @@ mixin delta(title, contents, type)
         tr
           th.image
           th.name Name
-          th.count Members
-          th.delta Delta
+          if joined
+            th.count Joined
+          if left
+            th.delta Left
       tbody
         if contents != undefined
           each val in contents
             tr
               td.image 
-                +image(type, val.id, 32, val.name)
+                +image(type, val.id)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
-              td.count.number= val.memberCount
-              td.delta.number= val.diff
+              if joined
+                td= val.start_date
+              if left
+                td= val.end_date

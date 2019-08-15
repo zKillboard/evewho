@@ -1,0 +1,6 @@
+mixin tda(key, value, type, id)
+  if value != undefined
+    tr
+      td= key
+      td
+        a(href='/' + type + '/' + id)= value
