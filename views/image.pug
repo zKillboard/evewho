@@ -1,5 +1,5 @@
 mixin image(type, id, size = 32)
   if type == 'Character'
-    img(src='https://imageserver.eveonline.com/character/' + id + '_' + size + '.jpg')
+    img(data-src='https://imageserver.eveonline.com/character/' + id + '_' + size + '.jpg',width= size,height= size).lazy
   else 
-    img(src='https://imageserver.eveonline.com/' + type + '/' + id + '_' + size + '.png')
+    img(data-src='https://imageserver.eveonline.com/' + type + '/' + id + '_' + size + '.png',width= size,height= size).lazy

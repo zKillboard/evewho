@@ -4,7 +4,7 @@ include delta.pug
 block content
     div.row
         div.col-sm
-          +delta('Largest Independent Corporations', big_corporations, 'Corporation')
+          +delta('Largest Corporations', big_corporations, 'Corporation')
         div.col-sm
           +delta('Largest Alliances', big_alliances, 'Alliance')
     div.row
@@ -17,3 +17,6 @@ block content
           +delta('Shrinking Corporations', shrinking_corporations, 'Corporation')
         div.col-sm
           +delta('Shrinking Alliances', shrinking_alliances, 'Alliance')
+    div.row
+        div.col
+            p All corporations on this page are not associated with an alliance.

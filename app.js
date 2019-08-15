@@ -23,13 +23,7 @@ app.use(logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
 
-function nocache(req, res, next) {
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.header('Expires', '-1');
-  res.header('Pragma', 'no-cache');
-  next();
-}
-app.use(nocache);
+app.use(require('cors')());
 
 app.use(express.static(path.join(__dirname, 'public')));
 

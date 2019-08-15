@@ -1,0 +1,25 @@
+extends layout
+include delta.pug
+include sec_status.pug
+
+block content
+    div.row
+        div.col-sm
+          +delta('Most Corporations', most_corporations, 'Alliance')
+        div.col-sm
+          +delta('Top 10 Alliances', top_10_alliances, 'Alliance')
+    div.row
+        div.col-sm
+          +delta('Shrinking Alliances', shrinking_alliances, 'Alliance')
+        div.col-sm
+          +delta('Growing Alliances', growing_alliances, 'Alliance')
+    div.row
+        div.col-sm
+          +sec_status('Pirate Alliances', pirate_alliances, 'Alliance')
+        div.col-sm
+          +sec_status('Carebear Alliances', carebear_alliances, 'Alliance')
+    div.row
+        div.col-sm
+          +delta('Dead Alliances', dead_alliances, 'Alliance')
+        div.col-sm
+          +delta('Newest Alliances', newest_alliances, 'Alliance')
