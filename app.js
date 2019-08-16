@@ -23,6 +23,12 @@ app.use(logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
 
+const server_started = Date.now();
+app.use((req, res, next) => {
+    res.locals.server_started = server_started;
+    next();
+});
+
 app.use(require('cors')());
 
 app.use(express.static(path.join(__dirname, 'public')));

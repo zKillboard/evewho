@@ -3,7 +3,6 @@ module.exports = getData;
 async function getData(req, res) {
   req.params.id = parseInt(req.params.id);
 
-
   const o = {};
   const details = await req.app.mysql.query('select * from ew_alliances where alliance_id = ?', req.params.id);
   o.details = details[0];

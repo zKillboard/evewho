@@ -1,17 +1,16 @@
 include image.pug
 
 mixin history(title, type, contents, joined, left)
-  span.float-left
+  span.float-left.table-responsive
     h4= title
     table.table.table-striped.table-bordered.table-hover.table-sm.delta-table
       thead.thead-light
         tr
           th.image
           th.name Name
-          if joined
-            th.count Joined
-          if left
-            th.delta Left
+          th.joined.align-right
+            if !left && joined
+                | Joined
       tbody
         if contents != undefined
           each val in contents
@@ -20,7 +19,9 @@ mixin history(title, type, contents, joined, left)
                 +image(type, val.id)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
-              if joined
-                td= val.start_date
-              if left
-                td= val.end_date
+              td.dates
+                if left
+                  span.align-right.departed= val.end_date
+                  br
+                if joined
+                  span.align-right.joined= val.start_date

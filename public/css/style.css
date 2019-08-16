@@ -8,10 +8,10 @@ html, body {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
+    margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
 }
 .footer, .push {
-    height: 100px; /* .push must be the same height as .footer */
+    height: 50px; /* .push must be the same height as .footer */
 }
 .footer {
 }
@@ -20,7 +20,7 @@ html, body {
     font-size: 1%;
 }
 
-.count, .delta {
+.align-right {
     text-align: right;
 }
 
@@ -35,4 +35,8 @@ html, body {
 }
 .delta-table tbody tr td.delta {
     width: 60px;
+}
+
+.dates {
+    width: 120px;
 }
