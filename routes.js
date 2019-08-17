@@ -34,4 +34,9 @@ router.get('/character/:id', async function(req, res, next) {
   res.render('character', await controller(req, res));
 });
 
+router.get('/search/', async function(req, res, next) {
+  const controller = require(res.app.root + '/controllers/search.js');
+  await controller(req, res);
+});
+
 module.exports = router;

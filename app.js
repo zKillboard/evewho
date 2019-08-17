@@ -7,8 +7,7 @@ var getJSON = require('get-json');
 var redis = require('async-redis').createClient();
 const app_path = __dirname;
 
-var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+var indexRouter = require('./routes.js');
 
 var app = express();
 app.root = __dirname;
@@ -17,6 +16,9 @@ app.redis = redis;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+//app.use(express.json()) // for parsing application/json
+//app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 //app.enable('etag');
 app.use(logger('dev'));
