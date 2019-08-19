@@ -6,9 +6,10 @@ async function getData(req, res) {
   let result = [];
   let chars = await search(res, 'character', name);
   if (chars.length) result = result.concat(chars);
-  //result.push(await search(res, 'character', name));
-  //result.push(await search(res, 'corporation', name));
-  //result.push(await search(res, 'alliance', name));
+  let corps = await search(res, 'corporation', name);
+  if (corps.length) result = result.concat(corps);
+  let alli = await search(res, 'alliance', name);
+  if (alli.length) result = result.concat(alli);
 
   result = { 'suggestions': result };
   res.json(result);
