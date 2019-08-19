@@ -38,7 +38,8 @@ html, body {
 }
 
 .dates {
-    width: 120px;
+    float: right;
+    min-width: 130px;
 }
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }

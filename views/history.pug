@@ -19,9 +19,9 @@ mixin history(title, type, contents, joined, left)
                 +image(type, val.id)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
-              td.dates
+              td
                 if left
-                  span.align-right.departed= val.end_date
+                  span.dates.align-right.departed= val.end_date
                   br
                 if joined
-                  span.align-right.joined= val.start_date
+                  span.dates.align-right.joined= val.start_date

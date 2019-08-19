@@ -35,15 +35,27 @@ app.use(require('cors')());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(async function(req, res, next) {
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let now = Date.now();
+    now = now - (now % 10000);
+    let key = 'ip:' + ip + ':' + now;
+
+    res.app.redis.incr(key);
+    res.app.redis.expire(key, 1000);
+
+    let accesses = Number.parseInt(await res.app.redis.get(key));
+    if (accesses > 10) {
+        res.sendStatus(429);
+    } else {
+        next();
+    }
+});
+
 app.locals.pretty = true;
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	next(createError(404));
-});
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -54,6 +66,11 @@ app.use(function(err, req, res, next) {
 	// render the error page
 	res.status(err.status || 500);
 	res.render('error');
+});
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+	next(createError(404));
 });
 
 module.exports = app;
