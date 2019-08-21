@@ -7,9 +7,9 @@ var lazyLoadInstance = new LazyLoad({
 }).update();
     if (lazyLoadInstance) lazyLoadInstance.update();
 
-    $('#search').autocomplete({
+    $('#autocomplete').autocomplete({
       autoSelectFirst: true,
-      serviceUrl: '/search/',
+      serviceUrl: '/autocomplete/',
       dataType: 'json',
       onSelect: function (suggestion) {
           window.location = '/' + suggestion.data.type + '/' + suggestion.data.id;

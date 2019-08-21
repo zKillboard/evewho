@@ -36,8 +36,8 @@ addGet('/character/:id', 'character');
 addGet('/corporation/:id', 'corporation');
 addGet('/alliance/:id', 'alliance');
 
-router.get('/search/', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/search.js');
+router.get('/autocomplete/', async function(req, res, next) {
+  const controller = require(res.app.root + '/controllers/autocomplete.js');
   await controller(req, res);
 });
 
