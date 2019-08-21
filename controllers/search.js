@@ -3,6 +3,8 @@ module.exports = getData;
 async function getData(req, res) {
   const name = req.query.query;
 
+  await res.app.mysql.query('insert ignore into ew_unprocessed (name) values (?)', name);
+
   let result = [];
   let chars = await search(res, 'character', name);
   if (chars.length) result = result.concat(chars);

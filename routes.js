@@ -3,36 +3,38 @@ var router = express.Router();
 
 //const util = require('util')
 
-router.get('/', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/home.js');
-  res.render('home', await controller(req, res));
-});
+async function doStuff(req, res, next, controllerFile, pugFile) {
+  try {
+    const file = res.app.root + '/controllers/' + controllerFile + '.js';
+    const controller = require(file);
 
-router.get('/corp/', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/corps.js');
-  res.render('corps', await controller(req, res));
-});
+    let result = await controller(req, res);
 
-router.get('/alli/', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/allis.js');
-  res.render('allis', await controller(req, res));
-});
+    if (typeof result == "object") {
+      res.render(pugFile, result);
+    } else if (typeof result == "string") {
+      res.redirect(result);
+    } else {
+        res.sendStatus(404);
+    }
 
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-router.get('/alliance/:id', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/alliance.js');
-  res.render('alliance', await controller(req, res));
-});
+function addGet(route, controllerFile, pugFile) {
+   if (pugFile == undefined) pugFile = controllerFile;
+   router.get(route, (req, res, next) => { doStuff(req, res, next, controllerFile, pugFile); }); 
+}
 
-router.get('/corporation/:id', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/corporation.js');
-  res.render('corporation', await controller(req, res));
-});
+addGet('/', 'home');
+addGet('/corp/', 'corps');
+addGet('/alli/', 'allis');
 
-router.get('/character/:id', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/character.js');
-  res.render('character', await controller(req, res));
-});
+addGet('/character/:id', 'character');
+addGet('/corporation/:id', 'corporation');
+addGet('/alliance/:id', 'alliance');
 
 router.get('/search/', async function(req, res, next) {
   const controller = require(res.app.root + '/controllers/search.js');

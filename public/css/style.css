@@ -39,7 +39,7 @@ html, body {
 
 .dates {
     float: right;
-    min-width: 130px;
+    min-width: 135px;
 }
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
