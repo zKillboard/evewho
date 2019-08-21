@@ -17,13 +17,8 @@ app.redis = redis;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//app.use(express.json()) // for parsing application/json
-//app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-
-//app.enable('etag');
+app.enable('etag');
 app.use(logger('dev'));
-//app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
 
 const server_started = Date.now();
 app.use((req, res, next) => {
@@ -31,7 +26,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(require('cors')());
+app.disable('x-powered-by');
+//app.use(require('cors')());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
