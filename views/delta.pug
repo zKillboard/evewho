@@ -8,8 +8,8 @@ mixin delta(title, contents, type)
         tr
           th.image
           th.name Name
-          th.count Members
-          th.delta Delta
+          th.align-right.count Members
+          th.align-right.delta Delta
       tbody
         if contents != undefined
           each val in contents
@@ -18,5 +18,5 @@ mixin delta(title, contents, type)
                 +image(type, val.id, 32, val.name)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
-              td.count.number= val.memberCount
-              td.delta.number= val.diff
+              td.align-right.count.number= val.memberCount
+              td.align-right.delta.number= val.diff
