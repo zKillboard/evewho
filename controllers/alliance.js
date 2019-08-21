@@ -1,10 +1,15 @@
 module.exports = getData;
 
 async function getData(req, res) {
-  req.params.id = parseInt(req.params.id);
-
   const o = {};
-  const details = await req.app.mysql.query('select * from ew_alliances where alliance_id = ?', req.params.id);
+  let details = await req.app.mysql.query('select * from ew_alliances where alliance_id = ?', req.params.id);
+  if (details.length == 0) {
+    req.params.id = req.params.id.replace(/\+/g, ' ');
+    details = await req.app.mysql.query('select alliance_id from ew_alliances where name = ?', req.params.id);
+    if (details.length == 0) details = await req.app.mysql.query('select alliance_id from ew_alliances where name = ?', req.params.id + '.');
+    if (details.length > 0) return '/alliance/' + details[0].alliance_id;
+
+  }
 
   if (details.length == 0) return undefined;
 

@@ -36,6 +36,16 @@ addGet('/character/:id', 'character');
 addGet('/corporation/:id', 'corporation');
 addGet('/alliance/:id', 'alliance');
 
+addGet('/pilot/:id', 'character');
+addGet('/corp/:id', 'corporation');
+addGet('/alli/:id', 'alliance');
+
+// Redirects for old evewho
+router.get('/pilot/:id', (req, res, next) => { res.send('/character/' + req.params.id); });
+router.get('/corp/:id', (req, res, next) => { res.send('/corporation/' + req.params.id); });
+router.get('/alli/:id', (req, res, next) => { res.send('/alliance/' + req.params.id); });
+
+// Search!
 router.get('/autocomplete/', async function(req, res, next) {
   const controller = require(res.app.root + '/controllers/autocomplete.js');
   await controller(req, res);
