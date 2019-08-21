@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(async function(req, res, next) {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     let now = Date.now();
-    now = now - (now % 10000);
+    now = now - (now % 1000);
     let key = 'ip:' + ip + ':' + now;
 
     res.app.redis.incr(key);
