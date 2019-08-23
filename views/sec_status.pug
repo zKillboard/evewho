@@ -16,6 +16,7 @@ mixin sec_status(title, contents, type)
             tr
               td.image 
                 +image(type, val.id)
-              td.name= val.name
+              td.name
+                a(href='/' + type + '/' + val.id)= val.name
               td.count.number= val.memberCount
               td.delta.numberd= val.avg_sec_status
