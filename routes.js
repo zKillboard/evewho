@@ -10,12 +10,13 @@ async function doStuff(req, res, next, controllerFile, pugFile) {
 
     let result = await controller(req, res);
 
-    if (typeof result == "object") {
-      res.render(pugFile, result);
+    if (result === null) { 
+        res.sendStatus(404);
+    } else if (typeof result === "object") {
+      if (result.json !== undefined) res.json(result.json);
+      else res.render(pugFile, result);
     } else if (typeof result == "string") {
       res.redirect(result);
-    } else {
-        res.sendStatus(404);
     }
 
   } catch (e) {
@@ -39,6 +40,8 @@ addGet('/alliance/:id', 'alliance');
 addGet('/pilot/:id', 'character');
 addGet('/corp/:id', 'corporation');
 addGet('/alli/:id', 'alliance');
+
+addGet('/api/:type/:id', 'api');
 
 // Redirects for old evewho
 router.get('/pilot/:id', (req, res, next) => { res.send('/character/' + req.params.id); });
