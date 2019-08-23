@@ -11,6 +11,7 @@ var lazyLoadInstance = new LazyLoad({
       autoSelectFirst: true,
       serviceUrl: '/autocomplete/',
       dataType: 'json',
+      groupBy: 'groupBy',
       onSelect: function (suggestion) {
           window.location = '/' + suggestion.data.type + '/' + suggestion.data.id;
       },

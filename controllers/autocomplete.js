@@ -18,12 +18,13 @@ async function getData(req, res) {
 }
 
 async function search(res, type, name) {
-    let result = await res.app.mysql.query('select ' + type + '_id id, name from ew_' + type + 's where name = ? or name like ? order by name limit 10', [name, name + '%']);
+    let secondSort = (type == 'character' ? ' corporation_id desc ' : ' memberCount desc ');
+    let result = await res.app.mysql.query('select ' + type + '_id id, name from ew_' + type + 's where name = ? or name like ? order by name, ' + secondSort + ' limit 10', [name, name + '%']);
 
     let ret = [];
     for (let i = 0; i < result.length; i++ ) {
         row = result[i];
-        let add = {value: row.name, data: { 'type': type, id: row.id  }};
+        let add = {value: row.name, data: { 'type': type, groupBy: type + 's',  id: row.id  }};
         ret.push(add);
     }
     return ret;

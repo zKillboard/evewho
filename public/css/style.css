@@ -46,5 +46,5 @@ html, body {
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
-.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group { padding: 2px 5px; text-transform: capitalize; font-weight: bold; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
