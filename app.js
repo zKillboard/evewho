@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 app.disable('x-powered-by');
-//app.use(require('cors')());
+app.use('/api/', require('cors')());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
