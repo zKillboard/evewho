@@ -17,4 +17,6 @@ var lazyLoadInstance = new LazyLoad({
       },
       error: function(xhr) { console.log(xhr); }
     });
+
+     $('[data-toggle="tooltip"]').tooltip({trigger: 'click', title: 'data', placement: 'top'});
 });
