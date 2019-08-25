@@ -6,9 +6,9 @@ EveWho allows you to view the members of Eve Online corporations and alliances, 
 
 EveWho does provide a very basic API, here are some examples:
 
-    https://dev.evewho.com/api/character/1633218082
-    https://dev.evewho.com/api/corplist/98330748
-    https://dev.evewho.com/api/allilist/99006319
+    https://evewho.com/api/character/1633218082
+    https://evewho.com/api/corplist/98330748
+    https://evewho.com/api/allilist/99006319
 
 The API is CORS enabled. If you're looking for more detailed information about entities please utilize Eve Online's ESI.
 
