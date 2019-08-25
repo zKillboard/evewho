@@ -23,6 +23,7 @@ app.use(logger('dev'));
 const server_started = Date.now();
 app.use((req, res, next) => {
     res.locals.server_started = server_started;
+    res.locals.googleua = process.env.googleua;
     next();
 });
 
