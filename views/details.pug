@@ -37,9 +37,9 @@ mixin details(details, type, id)
           tr
             td
             td
-              a(href='https://evemaps.dotlan.net/corp/' + id, target= '_blank') DOTLAN
+              a(href='https://evemaps.dotlan.net/corp/' + details.name, target= '_blank') DOTLAN
         if type == 'alliance'
           tr
             td
             td
-              a(href='https://evemaps.dotlan.net/alliance/' + id, target= '_blank') DOTLAN
+              a(href='https://evemaps.dotlan.net/alliance/' + details.name, target= '_blank') DOTLAN
