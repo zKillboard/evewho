@@ -4,6 +4,11 @@
 html, body {
     height: 100%;
 }
+
+html {
+  overflow-y: scroll;
+}
+
 .wrapper {
     min-height: 100%;
     height: auto !important;

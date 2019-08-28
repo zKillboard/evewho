@@ -1,0 +1,22 @@
+extends layout
+include delta.pug
+
+block content
+    div.row
+        div.col-sm
+          +delta('Largest Corporations', big_corporations, 'corporation')
+        div.col-sm
+          +delta('Largest Alliances', big_alliances, 'alliance')
+    div.row
+        div.col-sm
+          +delta('Growing Corporations', growing_corporations, 'corporation')
+        div.col-sm
+          +delta('Growing Alliances', growing_alliances, 'alliance')
+    div.row
+        div.col-sm
+          +delta('Shrinking Corporations', shrinking_corporations, 'corporation')
+        div.col-sm
+          +delta('Shrinking Alliances', shrinking_alliances, 'alliance')
+    div.row
+        div.col
+            p All corporations on this page are not associated with an alliance.

@@ -7,4 +7,4 @@ block content
         div.col-sm
           +details(details, 'corporation', details.corporation_id)
         div.col-sm
-          +history('Characters', 'character', characters, true, false)
+          +history('Characters', 'character', characters, true, false, details.corporation_id)

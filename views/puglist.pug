@@ -1,0 +1,14 @@
+include details.pug
+include history.pug
+include image.pug
+
+each val in characters
+    tr
+        td.image
+            +image('character', val.id)
+        td.name
+            a(href='/character/' + val.id)= val.name
+        td
+          span.dates.align-right.departed= val.end_date
+          br
+          span.dates.align-right.joined= val.start_date

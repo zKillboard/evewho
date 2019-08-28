@@ -1,8 +1,26 @@
 include image.pug
 
-mixin history(title, type, contents, joined, left)
+mixin history(title, type, contents, joined, left, corp_id)
   span.float-left.table-responsive
-    h4= title
+    h4= title 
+
+    if (corp_id > 0) 
+      nav.navbar.navbar-expand.navbar-light.bg-light
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#charsbar', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        div#charsbar.collapse.navbar-collapse
+          ul.navbar-nav.mx-auto
+            li(which= 'current').nav-item.chars.active#charsCurrent
+              a.nav-link(href='')
+                | Current
+            li(which= 'joined').nav-item.chars.d-flex.justify-content-center#charsJoined
+              a.nav-link(href='')
+                | Joined
+            li(which= 'departed').nav-item.chars#charsDeparted
+              a.nav-link(href='')
+                | Departed
+
+
     table.table.table-striped.table-bordered.table-hover.table-sm.delta-table
       thead.thead-light
         tr
@@ -11,11 +29,11 @@ mixin history(title, type, contents, joined, left)
           th.joined.align-right
             if !left && joined
                 | Joined
-      tbody
+      tbody(corp_id = corp_id)#char-tbody
         if contents != undefined
           each val in contents
             tr
-              td.image 
+              td.image
                 +image(type, val.id)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
@@ -25,3 +43,8 @@ mixin history(title, type, contents, joined, left)
                   br
                 if joined
                   span.dates.align-right.joined= val.start_date
+
+    button#loadMore.btn.btn-primary Load More
+    br
+    br
+    br

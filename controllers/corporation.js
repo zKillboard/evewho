@@ -15,8 +15,8 @@ async function getData(req, res) {
 
   o.details = details[0];
   if (o.details.is_npc_corp != 1) {
-    o.characters = await req.app.mysql.query('select distinct ew.character_id id, name, date_format(start_date, "%Y/%m/%d %H:%i") start_date from ew_characters ew left join ew_history eh on ew.character_id = eh.character_id where ew.corporation_id = ? and eh.corporation_id = ? and end_date is null order by start_date desc', [req.params.id, req.params.id]);
-    }
+    o.characters = []; //await req.app.mysql.query('select distinct ew.character_id id, name, date_format(start_date, "%Y/%m/%d %H:%i") start_date from ew_characters ew left join ew_history eh on ew.character_id = eh.character_id where ew.corporation_id = ? and eh.corporation_id = ? and end_date is null order by start_date desc limit 500', [req.params.id, req.params.id]);
+  }
 
   if (o.details.memberCount > 0 && o.details.ceoID > 1) {
     const ceo = await req.app.mysql.query('select character_id, name from ew_characters where character_id = ?', o.details.ceoID);

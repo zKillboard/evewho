@@ -41,6 +41,7 @@ addGet('/pilot/:id', 'character');
 addGet('/corp/:id', 'corporation');
 addGet('/alli/:id', 'alliance');
 
+addGet('/pug/list/:id/:which/:page', 'puglist');
 addGet('/api/:type/:id', 'api');
 
 // Redirects for old evewho
