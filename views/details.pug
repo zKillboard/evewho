@@ -33,4 +33,13 @@ mixin details(details, type, id)
           td
           td
             a(href='https://zkillboard.com/' + type + '/' + id + '/', target= '_blank') zKillboard
-                
+        if type == 'corporation'
+          tr
+            td
+            td
+              a(href='https://evemaps.dotlan.net/corp/' + id, target= '_blank') DOTLAN
+        if type == 'alliance'
+          tr
+            td
+            td
+              a(href='https://evemaps.dotlan.net/alliance/' + id, target= '_blank') DOTLAN
