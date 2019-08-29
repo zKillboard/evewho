@@ -18,7 +18,7 @@ async function getData(req, res) {
     case 'departed':
         left = true;
         right = true;
-        query = 'select h.character_id id, name, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history h left join ew_characters c on h.character_id = c.character_id where end_date is not null and h.corporation_id = ? order by start_date desc limit 250 offset ?';
+        query = 'select h.character_id id, name, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history h left join ew_characters c on h.character_id = c.character_id where end_date is not null and h.corporation_id = ? order by end_date desc limit 250 offset ?';
         break;
     default:
         return null;
