@@ -26,6 +26,9 @@ $(document).ready(function() {
         let observer = new IntersectionObserver(loadNextPage, { threshold: 1.0 });
         observer.observe(document.querySelector('#loadMore'));
     }
+    
+    $('#darkModeToggle').on('click', darkModeToggle);
+    darkModeInit();
 });
 
 function changeWhich(event) {
@@ -64,5 +67,22 @@ function addHistoryData(tbody, data) {
         $("#loadMore").prop('disabled', false);
     } else {
         $("#loadMore").hide();
+    }
+}
+
+function darkModeInit() {
+    if (localStorage.getItem('dark')) {
+        document.body.className = 'dark';
+    }
+}
+
+function darkModeToggle(event) {
+    event.preventDefault();
+    if (localStorage.getItem('dark')) {
+        localStorage.removeItem('dark');
+        document.body.className = '';
+    } else {
+        localStorage.setItem('dark', true);
+        document.body.className = 'dark';
     }
 }
