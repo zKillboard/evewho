@@ -63,3 +63,7 @@ body.dark{
 body.dark img {
     filter: invert(1);
 }
+
+body, img {
+    transition: all 150mm;
+}
