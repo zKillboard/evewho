@@ -60,7 +60,7 @@ body.dark{
     filter: invert(1);
 }
 
-body.dark img {
+body.dark img, body.dark iframe {
     filter: invert(1);
 }
 
