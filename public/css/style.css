@@ -67,3 +67,7 @@ body.dark img, body.dark iframe {
 body, img {
     transition: all 150mm;
 }
+
+.eveimage {
+    background-color: #222;
+}
