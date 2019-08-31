@@ -53,3 +53,8 @@ html {
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; text-transform: capitalize; font-weight: bold; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+.eveimage {
+    background-color: #222;
+}
+
