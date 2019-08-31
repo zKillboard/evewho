@@ -54,7 +54,20 @@ html {
 .autocomplete-group { padding: 2px 5px; text-transform: capitalize; font-weight: bold; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 
+/* invert filter based dark mode */
+body.dark{
+    background-color: black;
+    filter: invert(1);
+}
+
+body.dark img, body.dark iframe {
+    filter: invert(1);
+}
+
+body, img {
+    transition: all 150mm;
+}
+
 .eveimage {
     background-color: #222;
 }
-
