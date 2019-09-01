@@ -64,10 +64,6 @@ body.dark img, body.dark iframe {
     filter: invert(1);
 }
 
-body, img {
-    transition: all 150mm;
-}
-
 .eveimage {
     background-color: #222;
 }
