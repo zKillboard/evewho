@@ -27,7 +27,7 @@ $(document).ready(function() {
         observer.observe(document.querySelector('#loadMore'));
     }
     
-    $('#darkModeToggle').on('click', darkModeToggle);
+    $('#darkModeSelect').on('change', darkModeSelect);
     darkModeInit();
 });
 
@@ -71,18 +71,14 @@ function addHistoryData(tbody, data) {
 }
 
 function darkModeInit() {
-    if (localStorage.getItem('dark')) {
-        document.body.className = 'dark';
+    var theme = localStorage.getItem('dark');
+    if (theme === 'dark' || theme === 'light') {
+        document.getElementById('darkModeSelect').value = theme;
+        document.body.className = theme;
     }
 }
 
-function darkModeToggle(event) {
-    event.preventDefault();
-    if (localStorage.getItem('dark')) {
-        localStorage.removeItem('dark');
-        document.body.className = '';
-    } else {
-        localStorage.setItem('dark', true);
-        document.body.className = 'dark';
-    }
+function darkModeSelect() {
+    localStorage.setItem('dark', document.getElementById('darkModeSelect').value);
+    darkModeInit();
 }
