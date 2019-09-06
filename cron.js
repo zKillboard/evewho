@@ -15,8 +15,8 @@ app.mysql = new Database({
 console.log('started');
 
 let tasks = [  
-    './cron/daily.js'
-    './cron/hourly.js'
+    './cron/daily.js',
+    './cron/hourly.js',
     './cron/home.js'
 ];
 
