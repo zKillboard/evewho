@@ -33,25 +33,28 @@ async function runTasks(app, tasks) {
         let task = arr[i];
         let taskConfig = tasks[task];
         let currentSpan = now - (now % taskConfig.span);
-        let runKey = 'crinstance:running:' + task;
         let curKey = 'crinstance:current:' + task + ':' + currentSpan;
+        let runKey = 'crinstance:running:' + task;
 
-        if (await app.redis.setnx(runKey, 'true') === 1 && await app.redis.get(curKey) === null) {
-            await app.redis.expire(runKey, taskConfig.expire || 300);
-            await app.redis.set(curKey, 'true');
-            await app.redis.expire(curKey, taskConfig.expire || 300);
+        if (await app.redis.get(curKey) != 'true' && await app.redis.get(curKey) != 'true') {
+            await app.redis.setex(curKey, Math.max(60, taskConfig.span || 300), 'true');
+            await app.redis.setex(runKey, Math.max(60, taskConfig.span || 300), 'true');
 
             f = require(task);
-            f(app).then(
-                async function() {  i
-                    await app.redis.del(runKey);
-                    console.log(task + ' executed');
-                },
-                async function(reason) {
-                    await app.redis.del(runKey);
-                    console.log(task + ' failed: ' + reason);
-            });
+            setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
         }
     }
     setTimeout(function() { runTasks(app, tasks); }, 1000);
+}
+
+async function runTask(task, f, app, curKey, runKey) {
+    try {
+        console.log(task + ' executing');
+        await f(app);
+        console.log(task + ' executed');
+    } catch (e) {
+        console.log(task + ' failure: ' + e);
+    } finally {
+        await app.redis.del(runKey);
+    } 
 }
