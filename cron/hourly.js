@@ -15,7 +15,4 @@ async function f(app) {
     await redis.set('evewho:chars_count', charsCount[0].count);
     await redis.set('evewho:corps_count', corpsCount[0].count);
     await redis.set('evewho:allis_count', allisCount[0].count);
-
-    setTimeout(function() { f(app); }, 3600000);
-    console.log('hourly done');
 }
