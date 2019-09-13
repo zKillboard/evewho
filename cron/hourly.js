@@ -1,0 +1,21 @@
+module.exports = f;
+
+async function f(app) {
+    let mysql = app.mysql;
+    let redis = app.redis;
+
+    await mysql.query("update ew_characters set name_phonetic = soundex(name) where name_phonetic is null");
+    await mysql.query("update ew_corporations set name_phonetic = soundex(name) where name_phonetic is null");
+    await mysql.query("update ew_alliances set name_phonetic = soundex(name) where name_phonetic is null");
+
+    let charsCount = await mysql.query("select count(*) count from ew_characters");
+    let corpsCount = await mysql.query("select count(*) count from ew_corporations");
+    let allisCount = await mysql.query("select count(*) count from ew_alliances");
+
+    await redis.set('evewho:chars_count', charsCount[0].count);
+    await redis.set('evewho:corps_count', corpsCount[0].count);
+    await redis.set('evewho:allis_count', allisCount[0].count);
+
+    setTimeout(function() { f(app); }, 3600000);
+    console.log('hourly done');
+}
