@@ -17,10 +17,11 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip({trigger: 'click', title: 'data', placement: 'top'});
 
-    //loadNextPage();
     $("#loadMore").on('click', loadNextPage);
     $("#charsbar a").on('click', changeWhich);
 
+    let tbody = $('#char-tbody');
+    if (tbody.length && tbody.attr('corp_id') == undefined) $('#loadMore').remove();
 
     if ($('#loadMore').length > 0) {
         let observer = new IntersectionObserver(loadNextPage, { threshold: 1.0 });
@@ -32,7 +33,6 @@ $(document).ready(function() {
 });
 
 function changeWhich(event) {
-console.log('foo');
     event.stopPropagation();
     $("#char-tbody").html("");
 
@@ -51,7 +51,7 @@ function loadNextPage(event) {
     let which = $("#charsbar .active").attr('which');
     let tbody = $('#char-tbody');
 
-    if (tbody.length) {
+    if (tbody.length && tbody.attr('corp_id') != undefined) {
         tbody = $(tbody[0]);
         let url = '/pug/list/' + tbody.attr('corp_id') + '/' + which + '/' + page;
         console.log(url);

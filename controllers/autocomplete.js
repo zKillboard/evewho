@@ -3,7 +3,7 @@ module.exports = getData;
 async function getData(req, res) {
   const name = req.query.query;
 
-  await res.app.mysql.query('insert ignore into ew_unprocessed (name) values (?)', name);
+  //await res.app.mysql.query('insert ignore into ew_unprocessed (name) values (?)', name);
 
   let result = [];
   let chars = await search(res, 'character', name);
@@ -13,8 +13,7 @@ async function getData(req, res) {
   let alli = await search(res, 'alliance', name);
   if (alli.length) result = result.concat(alli);
 
-  result = { 'suggestions': result };
-  res.json(result);
+  res.json({ 'suggestions': result });
 }
 
 async function search(res, type, name) {
