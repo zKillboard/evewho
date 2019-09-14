@@ -1,7 +1,9 @@
 module.exports = getData;
 
+const utf8 = require('utf8');
+
 async function getData(req, res) {
-  const name = req.query.query;
+  const name = utf8.encode(req.query.query);
 
   //await res.app.mysql.query('insert ignore into ew_unprocessed (name) values (?)', name);
 
