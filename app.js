@@ -89,7 +89,6 @@ setInterval(function() { checkMysql(app); }, 15000);
 async function checkMysql(app) {
     try {
         let result = await app.mysql.query('select * from ew_characters limit 5');
-        console.log('mysql connection good');
     } catch (e) {
         console.log('Lost mysql connection');
         process.exit(1);
