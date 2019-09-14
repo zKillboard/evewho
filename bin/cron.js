@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var Database = require('./classes/Database.js');
+var Database = require('../classes/Database.js');
 var getJSON = require('get-json');
 var redis = require('async-redis').createClient();
 var phin = require('phin').defaults({'parse': 'json', 'headers': { 'User-Agent': 'evewho.com' } });
@@ -17,10 +17,10 @@ database: 'evewho'
 });
 
 let tasks = {
-    './cron/daily.js': { span : 86400 },
-    './cron/hourly.js': { span: 3600 },
-    './cron/home.js': { span: 900 },
-    './cron/populate_alliances.js': { span: 3600 }
+    '../cron/daily.js': { span : 86400 },
+    '../cron/hourly.js': { span: 3600 },
+    '../cron/home.js': { span: 900 },
+    '../cron/populate_alliances.js': { span: 3600 }
 }
 
 setTimeout(function() { runTasks(app, tasks); }, 1);
