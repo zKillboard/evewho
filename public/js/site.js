@@ -23,10 +23,7 @@ $(document).ready(function() {
     let tbody = $('#char-tbody');
     if (tbody.length && tbody.attr('corp_id') == undefined) $('#loadMore').remove();
 
-    if ($('#loadMore').length > 0) {
-        let observer = new IntersectionObserver(loadNextPage, { threshold: 1.0 });
-        observer.observe(document.querySelector('#loadMore'));
-    }
+    loadNextPage();
     
     $('#darkModeSelect').on('change', darkModeSelect);
     darkModeInit();
@@ -64,7 +61,7 @@ function addHistoryData(tbody, data) {
     new LazyLoad({elements_selector: ".lazy"}).update();
     if (data.length > 0) { 
         page++;
-        $("#loadMore").prop('disabled', false);
+        $("#loadMore").prop('disabled', false).blur();
     } else {
         $("#loadMore").hide();
     }
