@@ -16,6 +16,10 @@ async function getData(req, res) {
   o.details = details[0];
   o.history = await req.app.mysql.query('select eh.corporation_id id, ec.name, date_format(start_date, "%Y/%m/%d %H:%i") start_date , date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history eh left join ew_corporations ec on eh.corporation_id = ec.corporation_id where character_id = ? order by record_id desc', req.params.id);
 
+  if (details[0].corporation_id == 1000001) {
+    o.history.unshift({id: 1000001, name: 'Doomheim (character recycled)'});
+  }
+
   o.title = o.details.name;
   
   return o;
