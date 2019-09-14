@@ -1,0 +1,14 @@
+[Unit]
+Description=EveWho
+
+[Service]
+ExecStart=/var/www/evewho.com/bin/www.js
+Restart=always
+User=nobody
+Group=nogroup
+Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=/var/www/evewho.com/.env
+WorkingDirectory=/var/www/evewho.com
+
+[Install]
+WantedBy=multi-user.target
