@@ -49,7 +49,6 @@ async function runTasks(app, tasks) {
 
 async function runTask(task, f, app, curKey, runKey) {
     try {
-        console.log(task + ' executing');
         await f(app);
         console.log(task + ' executed');
     } catch (e) {
