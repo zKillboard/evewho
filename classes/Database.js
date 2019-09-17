@@ -1,7 +1,8 @@
 const mysql = require( 'mysql' );
 class Database {
 	constructor( config ) {
-		this.connection = mysql.createConnection( config );
+		//this.connection = mysql.createConnection( config );
+        this.connection  = mysql.createPool( config );
 	}
 	query( sql, args ) {
 		return new Promise( ( resolve, reject ) => {

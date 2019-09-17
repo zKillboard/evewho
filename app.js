@@ -83,14 +83,3 @@ app.mysql = mysql;
 
 //var update_chars = require('./bin/update_chars.js');
 //update_chars(mysql);
-
-//setTimeout(function() { process.exit(0); }, 60000);
-setInterval(function() { checkMysql(app); }, 15000);
-async function checkMysql(app) {
-    try {
-        let result = await app.mysql.query('select * from ew_characters limit 5');
-    } catch (e) {
-        console.log('Lost mysql connection');
-        process.exit(1);
-    }
-}
