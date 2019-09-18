@@ -3,7 +3,7 @@
 var Database = require('../classes/Database.js');
 var getJSON = require('get-json');
 var redis = require('async-redis').createClient();
-var phin = require('phin').defaults({'parse': 'json', 'headers': { 'User-Agent': 'evewho.com' } });
+var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } });
 
 const app = {};
 
@@ -45,9 +45,9 @@ async function runTasks(app, tasks) {
         let curKey = 'crinstance:current:' + task + ':' + currentSpan;
         let runKey = 'crinstance:running:' + task;
 
-        if (await app.redis.get(curKey) != 'true' && await app.redis.get(curKey) != 'true') {
+        if (await app.redis.get(curKey) != 'true' && await app.redis.get(runKey) != 'true') {
             await app.redis.setex(curKey, Math.max(60, taskConfig.span || 300), 'true');
-            await app.redis.setex(runKey, Math.max(60, taskConfig.span || 300), 'true');
+            await app.redis.setex(runKey, Math.max(300), 'true');
 
             f = require(task);
             setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
@@ -59,7 +59,7 @@ async function runTasks(app, tasks) {
 async function runTask(task, f, app, curKey, runKey) {
     try {
         await f(app);
-        console.log(task + ' executed');
+        console.log(task + ' executed ');
     } catch (e) {
         console.log(task + ' failure: ' + e);
     } finally {
