@@ -29,13 +29,11 @@ async function search(res, type, name, ticker) {
       let secondSort = (type == 'character' ? ' ' : ', memberCount desc ');
       let column = (ticker ? ' ticker ' : ' name' );
       let query = 'select ' + type + '_id id, name from ew_' + type + 's where ' + column + ' = ? or ' + column + '  like ? order by name ' + secondSort + ' limit 10';
-console.log(query);
       let result = await res.app.mysql.query(query, [name, name + '%']);
 
       let ret = [];
       for (let i = 0; i < result.length; i++ ) {
         row = result[i];
-console.log(row.id + ' ' + row.name + ' ' + name);
         let add = {value: row.name, data: { 'type': type, groupBy: type + 's',  id: row.id  }};
         ret.push(add);
       }
