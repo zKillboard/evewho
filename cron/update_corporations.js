@@ -5,6 +5,8 @@ async function f(app) {
 
     let corps = await app.mysql.query('select corporation_id from ew_corporations where lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 600');
     for (let i = 0; i < corps.length; i++ ){
+        if (app.bailout == true) break;
+
         let row = corps[i];
         let corp_id = row.corporation_id;
 
@@ -32,6 +34,11 @@ async function parse(app, res, corp_id, url) {
         app.error_count++;
         if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
         setTimeout(function() { app.error_count--; }, 1000);
+
+        if (res.statusCode == 420) {
+            app.bailout = true;
+            setTimeout(function() { app.bailout = false; }, 60000);
+        }
     }
   } catch (e) { 
     console.log(url + ' ' + e);

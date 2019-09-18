@@ -8,6 +8,7 @@ var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } }
 const app = {};
 
 app.debug = false;
+app.bailout = false;
 app.error_count = 0;
 app.phin = phin;
 app.redis = redis;
