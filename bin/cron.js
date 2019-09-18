@@ -7,6 +7,8 @@ var phin = require('phin').defaults({'parse': 'json', 'headers': { 'User-Agent':
 
 const app = {};
 
+app.debug = false;
+app.error_count = 0;
 app.phin = phin;
 app.redis = redis;
 app.mysql = new Database({
@@ -15,12 +17,19 @@ user: 'evewho',
 password: 'evewho',
 database: 'evewho'
 });
+app.sleep = function sleep(ms){ return new Promise(resolve=>{ setTimeout(resolve,ms) });}
+
+if (process.argv[2]) {
+    debug(process.argv[2]);
+    return;
+}
 
 let tasks = {
     '../cron/daily.js': { span : 86400 },
     '../cron/hourly.js': { span: 3600 },
     '../cron/home.js': { span: 900 },
-    '../cron/populate_alliances.js': { span: 3600 }
+    '../cron/populate_alliances.js': { span: 3600 },
+    '../cron/update_corporations.js': { span: 15 }
 }
 
 setTimeout(function() { runTasks(app, tasks); }, 1);
@@ -44,7 +53,7 @@ async function runTasks(app, tasks) {
             setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
         }
     }
-    setTimeout(function() { runTasks(app, tasks); }, 1000);
+    if (app.debug == false) setTimeout(function() { runTasks(app, tasks); }, 1000);
 }
 
 async function runTask(task, f, app, curKey, runKey) {
@@ -56,4 +65,13 @@ async function runTask(task, f, app, curKey, runKey) {
     } finally {
         await app.redis.del(runKey);
     } 
+}
+
+async function debug(task) {
+    app.debug = true;
+    console.log('Debugging ' + task);
+    let f = require('../cron/' + process.argv[2]);
+    await runTask(process.argv[2], f, app, '0', '0');
+    await app.sleep(10000);
+    process.exit();
 }
