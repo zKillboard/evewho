@@ -30,7 +30,8 @@ let tasks = {
     '../cron/hourly.js': { span: 3600 },
     '../cron/home.js': { span: 900 },
     '../cron/populate_alliances.js': { span: 3600 },
-    '../cron/update_corporations.js': { span: 15 }
+    '../cron/update_corporations.js': { span: 15 },
+    '../cron/update_alliances.js': { span: 15 },
 }
 
 setTimeout(function() { runTasks(app, tasks); }, 1);
@@ -73,6 +74,6 @@ async function debug(task) {
     console.log('Debugging ' + task);
     let f = require('../cron/' + process.argv[2]);
     await runTask(process.argv[2], f, app, '0', '0');
-    await app.sleep(10000);
+    await app.sleep(1000);
     process.exit();
 }
