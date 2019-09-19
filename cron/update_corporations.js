@@ -24,12 +24,19 @@ async function parse(app, res, corp_id, url) {
     if (res.statusCode == 200) {
         var body = JSON.parse(res.body);
 
-        let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [d0(body.alliance_id), d0(body.faction_id), d0(body.ceo_id), d0(body.memberCount), body.name, body.ticker, d0(body.tax_rate), corp_id]);
+        let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
         if (r.changedRows > 0) {
             await app.mysql.query('update ew_corporations set recalc = 1, lastUpdated = now() where corporation_id = ?', [corp_id]);
         } else {
             await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', [corp_id]);
         }
+        if (body.alliance_id > 0) {
+            await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id]);
+        }
+        await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [body.creator_id]);
+        if (body.ceo_id > 1) {
+            await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [body.ceo_id]);
+        } 
     } else {
         app.error_count++;
         if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
@@ -47,8 +54,4 @@ async function parse(app, res, corp_id, url) {
 
 async function failed(e, corp_id) {
     console.log(e);
-}
-
-function d0(field) {
-    return (field == undefined ? 0 : field);
 }

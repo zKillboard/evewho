@@ -3,7 +3,7 @@ module.exports = f;
 async function f(app) {
     let promises = [];
 
-    let allis = await app.mysql.query('select alliance_id from ew_alliances where lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 300');
+    let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 300');
     for (let i = 0; i < allis.length; i++ ){
         if (app.bailout == true) break;
 
@@ -68,8 +68,4 @@ async function parse_corps(app, res, alli_id, url) {
 
 async function failed(e, alli_id) {
     console.log(e);
-}
-
-function d0(field) {
-    return (field == undefined ? 0 : field);
 }
