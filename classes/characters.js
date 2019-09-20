@@ -40,6 +40,7 @@ let parse_corps = async function(app, res, char_id, url) {
             }
         } else {
             console.log(res.statusCode + ' ' + url);
+            await app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', [char_id]);
         }
     } catch (e) {
         console.log(url + ' ' + e);
