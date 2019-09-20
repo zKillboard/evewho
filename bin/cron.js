@@ -30,9 +30,9 @@ let tasks = {
     '../cron/hourly.js': { span: 3600 },
     '../cron/home.js': { span: 900 },
     '../cron/populate_alliances.js': { span: 3600 },
+    '../cron/update_characters.js': { span: 1 },
     '../cron/update_corporations.js': { span: 15 },
     '../cron/update_alliances.js': { span: 15 },
-    '../cron/update_characters.js': { span: 15 },
 }
 
 // Clear existing runnign keys
@@ -58,8 +58,8 @@ async function runTasks(app, tasks) {
         let runKey = 'crinstance:running:' + task;
 
         if (await app.redis.get(curKey) != 'true' && await app.redis.get(runKey) != 'true') {
-            await app.redis.setex(curKey, Math.max(60, taskConfig.span || 300), 'true');
-            await app.redis.setex(runKey, Math.max(300), 'true');
+            await app.redis.setex(curKey, taskConfig.span || 300, 'true');
+            await app.redis.setex(runKey, 300, 'true');
 
             f = require(task);
             setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
