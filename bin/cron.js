@@ -35,7 +35,16 @@ let tasks = {
     '../cron/update_characters.js': { span: 15 },
 }
 
-setTimeout(function() { runTasks(app, tasks); }, 1);
+// Clear existing runnign keys
+setTimeout(function() { clearRunKeys(app); }, 1);
+async function clearRunKeys(app) {
+    let runkeys = await app.redis.keys('crinstance:running*');
+    for (let i = 0; i < runkeys.length; i++) {
+        await app.redis.del(runkeys[i]);
+    }
+    setTimeout(function() { runTasks(app, tasks); }, 1);
+}
+
 async function runTasks(app, tasks) {
     let now = Date.now();
     now = Math.floor(now / 1000);
