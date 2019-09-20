@@ -39,7 +39,7 @@ let parse_corps = async function(app, res, char_id, url) {
                 corp_number++;
             }
         } else {
-            console.log(res.statusCode + ' ' + url);
+            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
             await app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', [char_id]);
         }
     } catch (e) {
