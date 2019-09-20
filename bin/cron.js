@@ -32,6 +32,7 @@ let tasks = {
     '../cron/populate_alliances.js': { span: 3600 },
     '../cron/update_corporations.js': { span: 15 },
     '../cron/update_alliances.js': { span: 15 },
+    '../cron/update_characters_doomheim.js': { span: 15 },
 }
 
 setTimeout(function() { runTasks(app, tasks); }, 1);
