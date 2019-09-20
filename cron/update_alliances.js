@@ -19,7 +19,10 @@ async function f(app) {
         let sleep = 200 + (app.error_count * 1000);
         await app.sleep(sleep); // Limit to 5/s + time for errors
     }
+
     await Promise.all(promises).catch();
+
+    return false;
 }
 
 async function parse(app, res, alli_id, url) {

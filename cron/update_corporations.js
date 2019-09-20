@@ -3,7 +3,7 @@ module.exports = f;
 async function f(app) {
     let promises = [];
 
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 600');
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 600');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
 
@@ -16,7 +16,10 @@ async function f(app) {
         let sleep = 100 + (app.error_count * 1000);
         await app.sleep(sleep); // Limit to 10/s + time for errors
     }
+
     await Promise.all(promises).catch();
+
+    return false;
 }
 
 async function parse(app, res, corp_id, url) {
