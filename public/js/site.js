@@ -24,9 +24,6 @@ $(document).ready(function() {
     if (tbody.length && tbody.attr('corp_id') == undefined) $('#loadMore').remove();
 
     loadNextPage();
-    
-    $('#darkModeSelect').on('change', darkModeSelect);
-    darkModeInit();
 });
 
 function changeWhich(event) {
@@ -65,17 +62,4 @@ function addHistoryData(tbody, data) {
     } else {
         $("#loadMore").hide();
     }
-}
-
-function darkModeInit() {
-    var theme = localStorage.getItem('dark');
-    if (theme === 'dark' || theme === 'light') {
-        document.getElementById('darkModeSelect').value = theme;
-        document.body.className = theme;
-    }
-}
-
-function darkModeSelect() {
-    localStorage.setItem('dark', document.getElementById('darkModeSelect').value);
-    darkModeInit();
 }
