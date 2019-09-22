@@ -35,6 +35,7 @@ let tasks = {
     '../cron/update_alliances.js': { span: 15 },
     '../cron/recalculate_alliances.js': { span: 60 },
     '../cron/recalculate_corporations.js': { span: 60 },
+    '../cron/listen_redisq.js': { span: 60 },
 }
 
 // Clear existing runnign keys
@@ -86,5 +87,6 @@ async function debug(task) {
     let f = require('../cron/' + process.argv[2]);
     await runTask(process.argv[2], f, app, '0', '0');
     await app.sleep(1000);
+    console.log('Exiting debug');
     process.exit();
 }
