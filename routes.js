@@ -10,7 +10,7 @@ async function doStuff(req, res, next, controllerFile, pugFile) {
 
     let result = await controller(req, res);
 
-    if (result === null) { 
+    if (result === null || result === undefined) { 
         res.sendStatus(404);
     } else if (typeof result === "object") {
       if (result.json !== undefined) res.json(result.json);
