@@ -26,16 +26,16 @@ if (process.argv[2]) {
 }
 
 let tasks = {
-    '../cron/daily.js': { span : 86400 },
-    '../cron/hourly.js': { span: 3600 },
-    '../cron/home.js': { span: 900 },
-    '../cron/populate_alliances.js': { span: 3600 },
-    '../cron/update_characters.js': { span: 1 },
-    '../cron/update_corporations.js': { span: 15 },
-    '../cron/update_alliances.js': { span: 15 },
-    '../cron/recalculate_alliances.js': { span: 60 },
-    '../cron/recalculate_corporations.js': { span: 60 },
-    '../cron/listen_redisq.js': { span: 60 },
+    'daily.js': { span : 86400 },
+    'hourly.js': { span: 3600 },
+    'home.js': { span: 900 },
+    'populate_alliances.js': { span: 3600 },
+    'update_characters.js': { span: 1 },
+    'update_corporations.js': { span: 15 },
+    'update_alliances.js': { span: 15 },
+    'recalculate_alliances.js': { span: 60 },
+    'recalculate_corporations.js': { span: 60 },
+    'listen_redisq.js': { span: 60 },
 }
 
 // Clear existing runnign keys
@@ -64,7 +64,7 @@ async function runTasks(app, tasks) {
             await app.redis.setex(curKey, taskConfig.span || 300, 'true');
             await app.redis.setex(runKey, 300, 'true');
 
-            f = require(task);
+            f = require('../cron/' + task);
             setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
         }
     }
@@ -75,7 +75,8 @@ async function runTask(task, f, app, curKey, runKey) {
     try {
         await f(app);
     } catch (e) {
-        console.log(task + ' failure: ' + e);
+        console.log(task + ' failure:');
+        console.log(e);
     } finally {
         await app.redis.del(runKey);
     } 
