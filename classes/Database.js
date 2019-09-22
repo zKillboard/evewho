@@ -13,6 +13,20 @@ class Database {
 			} );
 		} );
 	}
+    async queryRow(sql, args) {
+        let result = await this.query(sql, args);
+        if (result.length > 0) {
+            return result[0];
+        }
+        return result;
+    }
+    async queryField(field, sql, args) {
+        let row = await this.queryRow(sql, args);
+        if (row !== undefined) {
+            return row[field];
+        }
+        return row;
+    }
 	close() {
 		return new Promise( ( resolve, reject ) => {
 			this.connection.end( err => {
