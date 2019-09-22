@@ -7,7 +7,7 @@ const todaysDayOfMonth = new Date().getDate();
 async function f(app) {
     let promises = [];
 
-    let chars = await app.mysql.query('select character_id, name from ew_characters where character_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 2000');
+    let chars = await app.mysql.query('select character_id, name from ew_characters where character_id > 1 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 2000');
     for (let i = 0; i < chars.length; i++ ){
         if (app.bailout == true) {
             console.log('bailing');
