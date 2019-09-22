@@ -33,6 +33,7 @@ let tasks = {
     '../cron/update_characters.js': { span: 1 },
     '../cron/update_corporations.js': { span: 15 },
     '../cron/update_alliances.js': { span: 15 },
+    '../cron/recalculate_alliances.js': { span: 60 },
 }
 
 // Clear existing runnign keys
