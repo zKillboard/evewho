@@ -2,16 +2,20 @@ module.exports = f;
 
 async function f(app) {
     let url = 'https://redisq.zkillboard.com/listen.php';
-    do {
-        let res = await app.phin(url);
-        var body = JSON.parse(res.body);
-        if (body.package !== null) {
-            await add_entities(app, body.package.killmail.victim);
-            for (let i = 0; i < body.package.killmail.attackers.length; i++) {
-                await add_entities(app, body.package.killmail.attackers[i]);
+    try {
+        do {
+            let res = await app.phin(url);
+            var body = JSON.parse(res.body);
+            if (body.package !== null) {
+                await add_entities(app, body.package.killmail.victim);
+                for (let i = 0; i < body.package.killmail.attackers.length; i++) {
+                    await add_entities(app, body.package.killmail.attackers[i]);
+                }
             }
-        }
-    } while (body.package !== null); 
+        } while (body.package !== null); 
+    } catch (e) {
+        // Just ignore the error, try again later
+    }
 }
 
 async function add_entities(app, block) {
