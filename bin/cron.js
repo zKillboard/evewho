@@ -72,8 +72,7 @@ async function runTasks(app, tasks) {
 
 async function runTask(task, f, app, curKey, runKey) {
     try {
-        let ret = await f(app);
-        if (ret !== false) console.log(task + ' executed ');
+        await f(app);
     } catch (e) {
         console.log(task + ' failure: ' + e);
     } finally {

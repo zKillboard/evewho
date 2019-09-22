@@ -40,6 +40,4 @@ async function f(app) {
         await app.sleep(sleep); // Limit to 1/s + time for errors
     }
     await Promise.all(promises).catch();
-
-    return false;
 }

@@ -18,8 +18,6 @@ async function f(app) {
     }
 
     await Promise.all(promises).catch();
-
-    return false;
 }
 
 async function parse(app, res, corp_id, url) {
