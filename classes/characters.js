@@ -14,8 +14,15 @@ let parse = async function(app, res, char_id, url) {
             if (body.alliance_id > 0) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id || 0]);
         } else {
             app.error_count++;
-            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
             setTimeout(function() { app.error_count--; }, 1000);
+            if (res.statusCode == 404) {
+                // Get the row, if we have a name then this is a false 404, otherwise remove it
+                let row = await app.mysql.queryField('name', 'select name from ew_characters where character_id = ?', [char_id]);
+                if (row !== null && row !== undefined && row.length > 0) return;
+                console.log('Received valid 404 for ' + char_id);
+                await app.mysql.query('delete from ew_characters where character_id = ?', [char_id]);
+            }
+            else if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
 
             if (res.statusCode == 420) {
                 app.bailout = true;
