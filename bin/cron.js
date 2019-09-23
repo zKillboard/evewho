@@ -36,6 +36,7 @@ let tasks = {
     'recalculate_alliances.js': { span: 60 },
     'recalculate_corporations.js': { span: 60 },
     'listen_redisq.js': { span: 60 },
+    'populate_newbies.js': { span: 15 },
 }
 
 // Clear existing runnign keys
