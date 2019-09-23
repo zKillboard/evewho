@@ -6,19 +6,20 @@ let parse = async function(app, res, char_id, url) {
 
             let r = await app.mysql.query('update ew_characters set faction_id = ?, alliance_id = ?, corporation_id = ?, name = ?, sec_status = ? where character_id = ?', [body.faction_id || 0, body.alliance_id || 0, body.corporation_id || 0, body.name, body.security_status || 0, char_id]);
             if (r.changedRows > 0) {
+                await app.mysql.query('update ew_characters set history_added = 0 where character_id = ?', [char_id]);
                 await app.mysql.query('update ew_corporations set recalc = 1 where corporation_id = ?', [body.corporation_id || 0]);
                 await app.mysql.query('update ew_alliances set recalc = 1 where alliance_id = ?', [body.alliance_id || 0]);
             }
             await app.mysql.query('update ew_characters set lastUpdated = now() where character_id = ?', [char_id]);
             if (body.corporation_id > 100) await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [body.corporation_id || 0]);
-            if (body.alliance_id > 0) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id || 0]);
+            if (body.alliance_id > 10000) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id || 0]);
         } else {
             app.error_count++;
             setTimeout(function() { app.error_count--; }, 1000);
             if (res.statusCode == 404) {
-                // Get the row, if we have a name then this is a false 404, otherwise remove it
-                let row = await app.mysql.queryField('name', 'select name from ew_characters where character_id = ?', [char_id]);
-                if (row !== null && row !== undefined && row.length > 0) return;
+                // Get the name, if we have a name then this is a false 404, otherwise remove it
+                let name = await app.mysql.queryField('name', 'select name from ew_characters where character_id = ?', [char_id]);
+                if (name !== null && name !== undefined && name.length > 0) return;
                 console.log('Received valid 404 for ' + char_id);
                 await app.mysql.query('delete from ew_characters where character_id = ?', [char_id]);
             }
@@ -45,9 +46,9 @@ let parse_corps = async function(app, res, char_id, url) {
                 await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date, end_date, corp_number) values (?, ?, ?, ?, date_sub(?, interval 1 minute), ?)', [row.record_id, char_id, row.corporation_id, row.start_date, nextrow.start_date, corp_number]);
                 corp_number++;
             }
+            await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
         } else {
             if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
-            await app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', [char_id]);
         }
     } catch (e) {
         console.log(url + ' ' + e);

@@ -31,6 +31,7 @@ let tasks = {
     'home.js': { span: 900 },
     'populate_alliances.js': { span: 3600 },
     'update_characters.js': { span: 1 },
+    'update_characters_history.js': { span: 1 },
     'update_corporations.js': { span: 15 },
     'update_alliances.js': { span: 15 },
     'recalculate_alliances.js': { span: 60 },
