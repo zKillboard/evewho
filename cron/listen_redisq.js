@@ -16,7 +16,6 @@ async function f(app) {
             }
         } while (body.package !== null); 
     } catch (e) {
-console.log(e);
         // Just ignore the error, try again later
     }
 }
