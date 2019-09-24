@@ -1,5 +1,7 @@
 module.exports = f;
 
+const entity = require('../classes/entity.js');
+
 async function f(app) {
     let promises = [];
 
@@ -34,8 +36,8 @@ async function parse(app, res, alli_id, url) {
         } else {
             await app.mysql.query('update ew_alliances set lastUpdated = now() where alliance_id = ?', [alli_id]);
         }
-        await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [body.executor_corporation_id || 0]);
-        await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [body.creator_id || 0]);
+        await entity.add(app, 'corp', body.executor_corporation_id);
+        await entity.add(app, 'char', body.creator_id);
     } else {
         app.error_count++;
         if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
@@ -57,7 +59,7 @@ async function parse_corps(app, res, alli_id, url) {
             var body = JSON.parse(res.body);
             for (let i = 0; i < body.length; i++) {
                 let corp_id = body[i];
-                await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [corp_id]);
+                await entity.add(app, 'corp', corp_id);
             }
         } else {
             console.log(res.statusCode + ' ' + url);

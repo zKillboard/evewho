@@ -1,5 +1,7 @@
 module.exports = f;
 
+const entity = require('../classes/entity.js');
+
 async function f(app) {
     let promises = [];
 
@@ -21,36 +23,32 @@ async function f(app) {
 }
 
 async function parse(app, res, corp_id, url) {
-  try {
-    if (res.statusCode == 200) {
-        var body = JSON.parse(res.body);
+    try {
+        if (res.statusCode == 200) {
+            var body = JSON.parse(res.body);
 
-        let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
-        if (r.changedRows > 0) {
-            await app.mysql.query('update ew_corporations set recalc = 1, lastUpdated = now() where corporation_id = ?', [corp_id]);
+            let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
+            if (r.changedRows > 0) {
+                await app.mysql.query('update ew_corporations set recalc = 1, lastUpdated = now() where corporation_id = ?', [corp_id]);
+            } else {
+                await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', [corp_id]);
+            }
+            await entity.add(app, 'alli', body.alliance_id);
+            await entity.add(app, 'char', body.creator_id);
+            await entity.add(app, 'char', body.ceo_id);
         } else {
-            await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', [corp_id]);
-        }
-        if (body.alliance_id > 0) {
-            await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id]);
-        }
-        await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [body.creator_id]);
-        if (body.ceo_id > 1) {
-            await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [body.ceo_id]);
-        } 
-    } else {
-        app.error_count++;
-        if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
-        setTimeout(function() { app.error_count--; }, 1000);
+            app.error_count++;
+            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
+            setTimeout(function() { app.error_count--; }, 1000);
 
-        if (res.statusCode == 420) {
-            app.bailout = true;
-            setTimeout(function() { app.bailout = false; }, 60000);
+            if (res.statusCode == 420) {
+                app.bailout = true;
+                setTimeout(function() { app.bailout = false; }, 60000);
+            }
         }
+    } catch (e) { 
+        console.log(url + ' ' + e);
     }
-  } catch (e) { 
-    console.log(url + ' ' + e);
-  }
 }
 
 async function failed(e, corp_id) {

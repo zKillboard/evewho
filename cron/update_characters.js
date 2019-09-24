@@ -17,7 +17,6 @@ async function f(app) {
         let row = chars[i];
         let char_id = row.character_id;
 
-        if (chars.name != undefined && chars.name.length > 0) {
             let history = await app.mysql.query('select start_date from  (select start_date from ew_history where character_id = ? order by corp_number desc limit 1) as subq where start_date < date_sub(now(), interval 3 year)', [char_id]);
             if (history.length > 0) {
                 let mod = char_id % 28;
@@ -26,7 +25,6 @@ async function f(app) {
                     continue;
                 }
             }
-        }
 
         let url = 'https://esi.evetech.net/v4/characters/' + char_id + '/';
         promises.push(app.phin(url).then(res => { characters.parse(app, res, char_id, url); }).catch(e => { characters.failed(e, char_id); }));

@@ -1,5 +1,7 @@
 module.exports = f;
 
+const entity = require('../classes/entity.js');
+
 async function f(app) {
     try {
         let max_char_id = await app.mysql.queryField('char_id', 'select max(character_id) char_id from ew_characters where character_id > 2112000000 and character_id < 2200000000');
@@ -9,10 +11,11 @@ async function f(app) {
         let res = await app.phin('https://esi.evetech.net/v4/characters/' + next_id + '/');
         if (res.statusCode == 200) {
             for (let i = max_char_id + 1; i <= next_id; i++) {
-                await app.mysql.query('insert ignore into ew_characters (character_id) values (?)', [i]);
+                await entity.add(app, 'char', i);
             }
         }
     } catch (e) {
+        console.log(e);
         // Can be ignored
     }
 }
