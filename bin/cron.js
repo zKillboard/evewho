@@ -3,7 +3,7 @@
 var Database = require('../classes/Database.js');
 var getJSON = require('get-json');
 var redis = require('async-redis').createClient();
-var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } });
+var phin = require('phin').defaults({'method': 'get', 'headers': { 'User-Agent': 'evewho.com' } });
 
 const app = {};
 
@@ -30,8 +30,8 @@ let tasks = {
     'hourly.js': { span: 3600 },
     'home.js': { span: 900 },
     'populate_alliances.js': { span: 3600 },
-    'update_characters_recent.js': { span: 1 },
-    'update_characters_nonrecent.js': { span: 1 },
+    'update_characters.js': {span: 1},
+    'update_characters_by_affiliation.js': { span: 1},
     'update_characters_history.js': { span: 1 },
     'update_corporations.js': { span: 15 },
     'update_alliances.js': { span: 15 },
