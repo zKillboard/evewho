@@ -38,8 +38,9 @@ let parse = async function(app, res, char_id, url) {
 let parse_corps = async function(app, res, char_id, url) {
     try {
         if (res.statusCode == 200) {
-            var body = JSON.parse(res.body);
+            var body = JSON.parse(res.body).reverse();
             let corp_number = 1;
+            await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
                 let row = body[i];
                 let nextrow = (i < (body.length - 1) ? body[i + 1] : {});
