@@ -14,7 +14,7 @@ async function f(app) {
         char_array.push(chars[i].character_id);
         map[chars[i].character_id] = chars[i];
     }
-    app.mysql.query('update ew_characters set lastAffUpdated = now() where character_id in (' + char_array.join() + ')');
+    await app.mysql.query('update ew_characters set lastAffUpdated = now() where character_id in (' + char_array.join() + ')');
 
     let url = 'https://esi.evetech.net/v1/characters/affiliation/'
     let data = JSON.stringify(char_array);
@@ -32,7 +32,7 @@ async function parse(app, res, map) {
             let prev = map[info.character_id];
 
             if (info.corporation_id | 0 != prev.corporation_id | 0 && info.alliance_id | 0 != prev.alliance_id | 0 && info.faction_id | 0 != info.faction_id | 0) {
-                app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', info.character_id);
+                await app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', info.character_id);
             }
         }
     } catch (e) {
