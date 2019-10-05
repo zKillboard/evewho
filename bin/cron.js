@@ -41,7 +41,7 @@ let tasks = {
     'populate_newbies.js': { span: 15 },
 }
 
-// Clear existing runnign keys
+// Clear existing running keys
 setTimeout(function() { clearRunKeys(app); }, 1);
 async function clearRunKeys(app) {
     let runkeys = await app.redis.keys('crinstance:running*');
