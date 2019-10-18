@@ -20,7 +20,7 @@ Delta is simply the difference in the number of pilots from 7 days ago. If 7 day
 
 **How did you get all this data? Are you scraping the API?**
 
-No scraping happening and everything is happening within CCP's Terms of Service. For an explanation I'll link my post on the EVEO forums here. The official forum announcement can be found here.
+No scraping happening and everything is happening within CCP's Terms of Service. For an explanation I'll link my post on the EVEO forums [here](https://forums-archive.eveonline.com/default.aspx?g=posts&m=83539). The official forum announcement can be found [here](https://forums.eveonline.com/default.aspx?g=posts&t=25940).
 
 **How do you determine the activity of a corporation?**
 
