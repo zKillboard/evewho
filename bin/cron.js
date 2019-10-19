@@ -11,6 +11,13 @@ app.debug = false;
 app.bailout = false;
 app.error_count = 0;
 app.phin = phin;
+app.fetch = async function(url, parser, failure, options) {
+    try {
+        return await parser(app, await phin(url), options);
+    } catch (e) {
+        return failure(app, e);
+    }
+};
 app.redis = redis;
 app.mysql = new Database({
 host: 'localhost',
