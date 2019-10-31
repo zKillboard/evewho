@@ -6,17 +6,22 @@ async function getData(req, res) {
   const name = utf8.encode(req.query.query);
 
   let result = [];
-  let chars = await search(res, 'character', name, false);
+  let chars = search(res, 'character', name, false);
+  let corps = search(res, 'corporation', name, false);
+  let corpstickers = search(res, 'corporation', name, true);
+  let alli = search(res, 'alliance', name, false);
+  let allitickers = search(res, 'alliance', name, true);
+
+  chars = await chars;
+  corps = await corps;
+  corpstickers = await corpstickers;
+  alli = await alli;
+  allitickers = await allitickers;
+
   if (chars.length) result = result.concat(chars);
-
-  let corps = await search(res, 'corporation', name, false);
   if (corps.length) result = result.concat(corps);
-  let corpstickers = await search(res, 'corporation', name, true);
   if (corpstickers.length) result = result.concat(corpstickers);
-
-  let alli = await search(res, 'alliance', name, false);
   if (alli.length) result = result.concat(alli);
-  let allitickers = await search(res, 'alliance', name, true);
   if (allitickers.length) result = result.concat(allitickers);
 
   res.json({ 'suggestions': result });
