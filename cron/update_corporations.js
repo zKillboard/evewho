@@ -5,7 +5,7 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 600');
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 5');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
 

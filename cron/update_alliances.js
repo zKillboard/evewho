@@ -5,7 +5,7 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
-    let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 300');
+    let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < allis.length; i++ ){
         if (app.bailout == true) break;
 
@@ -18,8 +18,8 @@ async function f(app) {
         let corpurl = 'https://esi.evetech.net/v1/alliances/' + alli_id + '/corporations/'
         promises.push(app.phin(corpurl).then(res => { parse_corps(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
-        let sleep = 200 + (app.error_count * 1000);
-        await app.sleep(sleep); // Limit to 5/s + time for errors
+        //let sleep = 200 + (app.error_count * 1000);
+        //await app.sleep(sleep); // Limit to 5/s + time for errors
     }
 
     await Promise.all(promises).catch();

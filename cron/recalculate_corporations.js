@@ -16,5 +16,6 @@ async function f(app) {
         let activity_level = Math.max(0, Math.min(9, Math.floor(Math.log(active))));
    
         await app.mysql.query('update ew_corporations set memberCount = ?, avg_sec_status = ?, active = ?, diff = -1 * (mc_7 - ?), recalc = 0 where corporation_id = ?', [info.count, info.avg_sec_status, activity_level, info.count, row.corporation_id]);
+        if (row.alliance_id > 0) await app.mysql.query('update ew_alliances set recalc = 1 where alliance_id = ?', [row.alliance_id]);
     }
 }

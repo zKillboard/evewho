@@ -7,7 +7,7 @@ const todaysDayOfMonth = new Date().getDate();
 async function f(app) {
     let promises = [];
 
-    let chars = await app.mysql.query('select character_id, name from ew_characters order by lastUpdated limit 10000');
+    let chars = await app.mysql.query('select character_id, name from ew_characters order by lastUpdated limit 5');
     for (let i = 0; i < chars.length; i++ ) {
         if (app.bailout == true) {
             console.log('bailing');
@@ -20,7 +20,7 @@ async function f(app) {
         let url = 'https://esi.evetech.net/v4/characters/' + char_id + '/';
         promises.push(app.phin(url).then(res => { characters.parse(app, res, char_id, url); }).catch(e => { characters.failed(e, char_id); }));
 
-        let sleep = 20 + (app.error_count * 1000);
+        let sleep = 100 + (app.error_count * 1000);
         await app.sleep(sleep); // Limit to 1/s + time for errors
     }
 
