@@ -34,7 +34,7 @@ mixin history(title, type, contents, joined, left, corp_id)
           each val in contents
             tr
               td.image
-                +image(type, val.id)
+                +image(type, val.id, 64, val.name)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
               td

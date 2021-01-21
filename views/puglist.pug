@@ -5,7 +5,7 @@ include image.pug
 each val in characters
     tr
         td.image
-            +image('character', val.id)
+            +image('character', val.id, 64, val.name)
         td.name
             a(href='/character/' + val.id)= val.name
         td
