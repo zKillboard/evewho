@@ -5,18 +5,21 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 5');
+    let second = Math.round(Date.now() / 1000);
+    if ((second % 60) > 30) return;
+
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
 
         let row = corps[i];
         let corp_id = row.corporation_id;
 
-        let url = 'https://esi.evetech.net/v4/corporations/' + corp_id + '/';
+        let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
 
-        let sleep = 100 + (app.error_count * 1000);
-        await app.sleep(sleep); // Limit to 10/s + time for errors
+        //let sleep = 100 + (app.error_count * 1000);
+        //await app.sleep(sleep); // Limit to 10/s + time for errors
     }
 
     await Promise.all(promises).catch();

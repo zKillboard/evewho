@@ -5,7 +5,7 @@ var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } }
 async function f(app) {
     let promises = [];
 
-    let chars = await app.mysql.query('select character_id, corporation_id, alliance_id, faction_id from ew_characters where lastUpdated > 0 and lastAffUpdated < date_sub(now(), interval 1 day) order by lastAffUpdated limit 1000');
+    let chars = await app.mysql.query('select character_id, corporation_id, alliance_id, faction_id from ew_characters where lastUpdated > 0 and lastAffUpdated < date_sub(now(), interval 1 day) order by lastAffUpdated limit 100');
     if (chars.length == 0) return;
 
     let char_array = [];
@@ -19,7 +19,7 @@ async function f(app) {
     let url = 'https://esi.evetech.net/v1/characters/affiliation/'
     let data = JSON.stringify(char_array);
     let params = {url: url, method: 'post', data: data};
-    promises.push(phin(params).then(res => { parse(app, res, map); }).catch(e => { failed(e, corp_id); }));
+    promises.push(phin(params).then(res => { parse(app, res, map); }).catch(e => { characters.failed(e, 0); }));
 
     await Promise.all(promises).catch();
 }
@@ -31,8 +31,11 @@ async function parse(app, res, map) {
             let info = json[i];
             let prev = map[info.character_id];
 
-            if (info.corporation_id | 0 != prev.corporation_id | 0 && info.alliance_id | 0 != prev.alliance_id | 0 && info.faction_id | 0 != info.faction_id | 0) {
-                await app.mysql.query('update ew_characters set lastUpdated = 0 where character_id = ?', info.character_id);
+            if (
+                ((info.corporation_id | 0) != (prev.corporation_id | 0))
+             || ((info.alliance_id | 0) != (prev.alliance_id | 0)) 
+             || ((info.faction_id | 0) != (info.faction_id | 0))) {
+                await app.mysql.query('update ew_characters set recent_change = 1, lastUpdated = now() where character_id = ?', info.character_id);
             }
         }
     } catch (e) {

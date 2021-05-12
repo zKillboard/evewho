@@ -5,6 +5,9 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
+    let second = Math.round(Date.now() / 1000);
+    if ((second % 60) > 30) return;
+
     let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < allis.length; i++ ){
         if (app.bailout == true) break;
@@ -12,7 +15,7 @@ async function f(app) {
         let row = allis[i];
         let alli_id = row.alliance_id;
 
-        let url = 'https://esi.evetech.net/v3/alliances/' + alli_id + '/';
+        let url = 'https://esi.evetech.net/v4/alliances/' + alli_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
         let corpurl = 'https://esi.evetech.net/v1/alliances/' + alli_id + '/corporations/'

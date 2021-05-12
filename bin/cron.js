@@ -37,8 +37,8 @@ let tasks = {
     'hourly.js': { span: 3600 },
     'home.js': { span: 900 },
     'populate_alliances.js': { span: 3600 },
-    'dustcleanup.js': {span: 1},
-    'update_characters.js': {span: 1},
+    //'dustcleanup.js': {span: 1},
+    //'update_characters.js': {span: 1},
     'update_characters_full.js': {span: 1},
     'update_characters_by_affiliation.js': { span: 1},
     'update_characters_history.js': { span: 1 },
@@ -80,7 +80,8 @@ async function runTasks(app, tasks) {
             setTimeout(() => { runTask(task, f, app, curKey, runKey); }, 1);
         }
     }
-    if (app.debug == false) setTimeout(function() { runTasks(app, tasks); }, 1000);
+    await app.sleep(Math.min(1000, Date.now() - now));
+    if (app.debug == false) runTasks(app, tasks);
 }
 
 async function runTask(task, f, app, curKey, runKey) {

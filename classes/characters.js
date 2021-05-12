@@ -3,7 +3,7 @@ let parse = async function(app, res, char_id, url) {
     try {
         if (res.statusCode == 200) {
             var body = JSON.parse(res.body);
-            //console.log(res.statusCode + ' ' + body.name);
+            if (char_id == 2117731375) console.log(res.statusCode + ' ' + char_id + ' ' + body.name);
 
             await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
             let r = await app.mysql.query('update ew_characters set faction_id = ?, alliance_id = ?, corporation_id = ?, name = ?, sec_status = ? where character_id = ?', [body.faction_id || 0, body.alliance_id || 0, body.corporation_id || 0, body.name, body.security_status || 0, char_id]);
