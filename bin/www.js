@@ -88,3 +88,10 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var watch = require('node-watch');
+watch(['public/','views/','controllers/','app.js','classes/','bin/www.js'], { recursive: true}, watchExit);
+async function watchExit(evt, name) {
+    console.log('Exiting');
+    process.exit();
+}

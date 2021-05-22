@@ -14,18 +14,22 @@ html
     script(src='/js/jquery.autocomplete.min.js')
     script(src='/js/site.js?v=' + server_started)
     link(rel='stylesheet', href='/css/style.css?v=' + server_started)
-    script(async='',src='https://cdn.fuseplatform.net/publift/tags/2/2362/fuse.js')
+    script(async='', src='https://cdn.fuseplatform.net/publift/tags/2/2362/fuse.js')
 
   body.dark
     div.wrapper
         include navbar.pug
-        div.container
+        div.container.ad-xl-none
           hr
-          div(data-fuse='22353933784')
+          div.d-flex.justify-content-center
+            div(data-fuse='22353933784')
+        div.container
           hr
         div.container
           block content
         div.push
+        div.d-none.ad-xl-block.left-sticky-ad(data-fuse='22353933787')
+        div.d-none.ad-xl-block.right-sticky-ad(data-fuse='22353933790')
     div.container
       footer.footer
             small

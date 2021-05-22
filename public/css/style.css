@@ -67,3 +67,34 @@ body.dark img, body.dark iframe {
 .eveimage {
     background-color: #222;
 }
+
+@media only screen and (min-width: 1580px) {
+    .left-sticky-ad {
+        position: fixed;
+        top: 50px;
+        left: calc(50% - 785px);
+        width: 180px;
+        max-width: 180px !important;
+        height: 600px;
+        max-height: 600px;
+        background-color: transparent;
+    }
+
+    .right-sticky-ad {
+        position: fixed;
+        top: 50px;
+        left: calc(50% + 615px);
+        width: 180px;
+        max-width: 180px !important;
+        height: 600px;
+        max-height: 600px;
+        background-color: transparent;
+    }
+
+    .ad-xl-block {
+        display: block !important;
+    }
+    .ad-xl-none {
+        display: none !important; 
+    }
+}
