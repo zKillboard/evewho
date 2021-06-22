@@ -29,6 +29,7 @@ async function f(app) {
 
         while (set.size > 5) await app.sleep(1);
         next(app, char_id);
+        //console.log('Checking ' + char_id);
 
         let round = 300;
         let now = Math.round(Date.now() / round);

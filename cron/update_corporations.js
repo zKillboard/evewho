@@ -8,27 +8,30 @@ async function f(app) {
     let second = Math.round(Date.now() / 1000);
     if ((second % 60) > 30) return;
 
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 100');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
 
         let row = corps[i];
         let corp_id = row.corporation_id;
+        if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) continue;
 
         let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
 
         //let sleep = 100 + (app.error_count * 1000);
         //await app.sleep(sleep); // Limit to 10/s + time for errors
+           break;
     }
 
-    await Promise.all(promises).catch();
+    //await Promise.all(promises).catch();
 }
 
 async function parse(app, res, corp_id, url) {
     try {
         if (res.statusCode == 200) {
             var body = JSON.parse(res.body);
+            //console.log('Updating corp ' + corp_id);
 
             let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
             if (r.changedRows > 0) {
