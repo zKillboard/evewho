@@ -35,7 +35,7 @@ async function next(app, char_id) {
     try {
         set.add(char_id);
 
-        let url = 'https://esi.evetech.net/v4/characters/' + char_id + '/';
+        let url = 'https://esi.evetech.net/v5/characters/' + char_id + '/';
         await app.phin(url).then(res => { characters.parse(app, res, char_id, url); }).catch(e => { characters.failed(e, char_id); });
     } finally {
         set.delete(char_id);
