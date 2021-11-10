@@ -17,6 +17,7 @@ async function f(app) {
         if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) continue;
 
         let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
+        if (corp_id == 98591742) url = 'https://esi.evetech.net/v4/corporations/' + corp_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
 
         //let sleep = 100 + (app.error_count * 1000);

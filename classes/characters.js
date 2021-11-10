@@ -10,11 +10,20 @@ let parse = async function(app, res, char_id, url) {
                 await app.mysql.query('update ew_characters set history_added = 0 where character_id = ?', [char_id]);
                 await app.mysql.query('update ew_corporations set recalc = 1 where corporation_id = ?', [body.corporation_id || 0]);
                 await app.mysql.query('update ew_alliances set recalc = 1 where alliance_id = ?', [body.alliance_id || 0]);
+                console.log('Updating: ', char_id, body.name, r.changedRows);
             }
-            console.log('Updating: ', char_id, body.name, r.changedRows);
             if (body.corporation_id > 100) await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [body.corporation_id || 0]);
             if (body.alliance_id > 10000) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id || 0]);
         } else {
+            if (res.statusCode == 404) {
+                var body = JSON.parse(res.body);
+                if (body.error == 'Character has been deleted!') {
+                    console.log(char_id, body);
+                    let r = await app.mysql.query('update ew_characters set recent_change = 0, faction_id = 0, alliance_id = 0, corporation_id = 1000001 where character_id = ?', [char_id]);
+                    return await app.sleep(1000);
+                }
+                console.log(body);
+            }
             app.error_count++;
             console.log('app error count at ', app.error_count);
             setTimeout(function() { app.error_count--; console.log('app error count at ', app.error_count); }, 1000);

@@ -26,6 +26,13 @@ password: 'evewho',
 database: 'evewho'
 });
 app.sleep = function sleep(ms){ return new Promise(resolve=>{ setTimeout(resolve,ms) });}
+app.isDowntime = function () {
+    var time = new Date();
+    var min = time.getMinutes();
+    var hour = ('0' + time.getHours()).substr(-2);
+    var hi = hour + min;
+    return (hi >= '1055' && hi <= '1130');
+}
 
 if (process.argv[2]) {
     debug(process.argv[2]);
@@ -48,6 +55,7 @@ let tasks = {
     'recalculate_corporations.js': { span: 15 },
     'listen_redisq.js': { span: 60 },
     'populate_newbies.js': { span: 15 },
+    'characters_redis_affiliation_populate.js': {span: 1},
 }
 
 // Clear existing running keys
