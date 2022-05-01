@@ -10,7 +10,7 @@ async function f(app) {
     return;
     let promises = [];
 
-    let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated = 0 and recent_change = 0 order by lastUpdated limit 10000');
+    let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated = 0 and recent_change = 0 and corporation_id != 1000001 order by lastUpdated limit 10000');
     for (let i = 0; i < chars.length; i++ ) {
         if (app.bailout == true) {
             console.log('bailing');

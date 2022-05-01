@@ -56,6 +56,9 @@ async function parse(app, res, map) {
             prev = prev[0];
 
             if (info.corporation_id != prev.corporation_id || info.alliance_id != prev.alliance_id) {
+                if (info.corporation_id == 1000001) {
+                    await app.mysql.query('update ew_characters set corporation_id = 1000001, alliance_id = 0, faction_id = 0 where character_id = ?', [char_id]);
+                }
                 await app.mysql.query('update ew_characters set recent_change = 1 where character_id = ?', [char_id]);
 
                 updates_required++;
