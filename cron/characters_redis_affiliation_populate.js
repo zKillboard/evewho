@@ -1,34 +1,31 @@
 'use strict';
 
-var aff = 'evewho:affliates';
 var m = false;
 var date = undefined;
 
 async function f(app) {
     if (m == false) {
         m = true;
-        try {
-            let count = parseInt(await app.redis.scard(aff) || 0);
-            if (count == 0) {
-                var updating = await app.mysql.query('select count(*) count from ew_characters where recent_change = 1');
-                if (updating[0].count > 100) {
-                    console.log('awaiting ' + updating[0].count + ' character updates');
-                    return await app.sleep(15000);
-                }
-
-                console.log('Starting big affiliation query');
-                let chars = await app.mysql.query('select character_id from ew_characters where corporation_id != 1000001 and recent_change = 0 order by lastAffUpdated limit 10000');
-                console.log('Loading', chars.length, 'characters');
-                for (let i = 0; i < chars.length; i++) {
-                    var row = chars[i];
-                    await app.redis.sadd(aff, row.character_id);
-                }
-                console.log('Finished big affiliation query');
-            } else {
-
+        if (parseInt(await app.redis.scard('evewho:affiliates') || 0) == 0) {
+            var today = new Date().getDate().toString();
+            if (today != await app.redis.get('evewho:affiliates:populated')) {
+                await app.redis.sunionstore('evewho:affiliates', 'evewho:affiliates:full');
+                console.log('Reset evewho:affiliates set');
+                await app.redis.setex('evewho:affiliates:populated', 86400, today);
             }
-    	} finally {
-                m = false;
+        }
+
+        try {
+            let chars = await app.mysql.query('select character_id from ew_characters where lastAffUpdated = 0');
+            for (let i = 0; i < chars.length; i++) {
+                var row = chars[i];
+                await app.redis.sadd('evewho:affiliates:full', row.character_id);
+                await app.redis.sadd('evewho:affiliates', row.character_id);
+                await app.mysql.query('update ew_characters set lastAffUpdated = now() where character_id = ?', row.character_id);
+            }
+            if (chars.length > 100) console.log('Affiliate prepared ', chars.length, 'characters');
+        } finally {
+            m = false;
         }
     }
 }

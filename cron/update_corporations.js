@@ -11,6 +11,7 @@ async function f(app) {
     let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 100');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
+        if (app.error_count > 0) break;
 
         let row = corps[i];
         let corp_id = row.corporation_id;

@@ -60,6 +60,8 @@ let parse_corps = async function(app, res, char_id, url) {
             if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
         }
     } catch (e) {
+            app.error_count++;
+            setTimeout(function() { app.error_count--; }, 1000);
         console.log(url + ' ' + e);
     }
 }

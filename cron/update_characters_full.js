@@ -14,12 +14,12 @@ async function f(app) {
     if (m == false) {
         m = true;
         var justAnyone = false;
-        var numCalls = 0;
 
         try {
             let second = Math.round(Date.now() / 1000);
 
-            let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated = 0 or recent_change = 1 order by lastUpdated desc limit 100');
+            let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated = 0 limit 100');
+            if (chars.length == 0) chars = await app.mysql.query('select character_id, name from ew_characters where recent_change = 1 limit 100');
 
             for (let i = 0; i < chars.length; i++ ) {
                 while (app.error_count > 0) await app.sleep(1000);
@@ -34,13 +34,11 @@ async function f(app) {
                 }
 
                 next(app, chars[i].character_id);
-                numCalls++;
                 await app.sleep(100);
                 while (set.size > 10) await app.sleep(10);
             }
 
             while (set.size > 0) await app.sleep(10);
-            if (numCalls > 0) console.log('Updated ' + numCalls + ' characters');
         } finally {
             m = false;
         }

@@ -13,6 +13,7 @@ async function f(app) {
             console.log('bailing');
             break;
         }
+        if (app.error_count > 0) break;
 
         let row = chars[i];
         let char_id = row.character_id;
