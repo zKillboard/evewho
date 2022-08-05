@@ -6,7 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "async-redis": "^1.1.7",
+    "async-redis": "^2.0.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
