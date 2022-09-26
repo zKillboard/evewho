@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 1
+}
 
 var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } });
 
@@ -6,7 +9,7 @@ var m = false;
 var aff = 'evewho:affiliates';
 
 async function f(app) {
-    if (app.isDowntime()) return;
+    if (app.util.isDowntime()) return;
 
     if (m == false) {
         m = true;

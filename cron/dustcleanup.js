@@ -1,4 +1,7 @@
-module.exports = dustcleanup;
+module.exports = {
+    exec: dustcleanup,
+    span: -1
+}
 
 async function dustcleanup(app) {
     let mysql = app.mysql;

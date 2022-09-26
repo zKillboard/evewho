@@ -30,4 +30,7 @@ async function f(app) {
     }
 }
 
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 1
+}

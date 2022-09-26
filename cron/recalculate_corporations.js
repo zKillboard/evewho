@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 15
+}
 
 async function f(app) {
     let result = undefined; 

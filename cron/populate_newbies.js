@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 15
+}
 
 const entity = require('../classes/entity.js');
 

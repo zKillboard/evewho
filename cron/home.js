@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 900
+}
 
 async function f(app) {
     setRedisResult(app, 'home:big_alliances', "select alliance_id id, name, memberCount, diff from ew_alliances order by memberCount desc limit 10");

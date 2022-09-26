@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 1
+}
 
 const characters = require('../classes/characters.js');
 

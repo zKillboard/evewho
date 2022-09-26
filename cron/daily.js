@@ -1,4 +1,7 @@
-module.exports = daily;
+module.exports = {
+    exec: daily,
+    span: 86400
+}
 
 async function daily(app) {
     let mysql = app.mysql;

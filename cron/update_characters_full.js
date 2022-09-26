@@ -1,4 +1,7 @@
-module.exports = f;
+module.exports = {
+    exec: f,
+    span: 1
+}
 
 const characters = require('../classes/characters.js');
 
@@ -9,7 +12,7 @@ const set = new Set();
 var m = false;
 
 async function f(app) {
-    if (app.isDowntime()) return;
+    if (app.util.isDowntime()) return;
 
     if (m == false) {
         m = true;
