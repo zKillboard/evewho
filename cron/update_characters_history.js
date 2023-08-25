@@ -24,8 +24,8 @@ async function f(app) {
         let corpurl = 'https://esi.evetech.net/v1/characters/' + char_id + '/corporationhistory/';
         promises.push(app.phin(corpurl).then(res => { characters.parse_corps(app, res, char_id, corpurl); }).catch(e => { characters.failed(e, char_id); }));
 
-        let sleep = 100 + (app.error_count * 1000);
-        await app.sleep(sleep); // Limit to 1/s + time for errors
+        let sleep = 300 + (app.error_count * 1000);
+        await app.sleep(sleep);
     }
     await Promise.all(promises).catch();
 }
