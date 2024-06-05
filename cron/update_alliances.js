@@ -51,7 +51,8 @@ async function parse(app, res, alli_id, url) {
 
         if (res.statusCode == 420) {
             app.bailout = true;
-            setTimeout(function() { app.bailout = false; }, 60000);
+            console.log('bailong in update_alliances');
+            setTimeout(function(app) { console.log('clearing bailout in update_alliances'); app.bailout = false; }, 60000);
         }
     }
   } catch (e) { 

@@ -54,7 +54,8 @@ async function parse(app, res, corp_id, url) {
 
             if (res.statusCode == 420) {
                 app.bailout = true;
-                setTimeout(function() { app.bailout = false; }, 60000);
+                console.log('bailing in update_corporatoins');
+                setTimeout(function(app) { console.log('clearing bailout inupdate_corporations'); app.bailout = false; }, 60000);
             }
         }
     } catch (e) { 

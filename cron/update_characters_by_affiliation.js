@@ -42,7 +42,9 @@ async function f(app) {
                 map[char_id] = chars[i];
 
                 if (char_array.length >= 1000) break;
+                if (app.bailout == true) break;
             }
+            if (app.bailout == true) return;
             if (char_array.length == 0) return;
             else console.log('Checking', char_array.length, 'characters');
 
@@ -70,6 +72,8 @@ async function parse(app, res, map) {
             info.faction_id = info.faction_id || 0;
             let prev = await app.mysql.query('select corporation_id, alliance_id, faction_id from ew_characters where character_id = ?', char_id);
             prev = prev[0];
+
+if (info.faction_id > 500004) console.log(info);
 
             if (info.corporation_id != prev.corporation_id || info.alliance_id != prev.alliance_id) {
                 if (info.corporation_id == 1000001) {
