@@ -35,7 +35,8 @@ let parse = async function(app, res, char_id, url) {
 
             if (res.statusCode == 420) {
                 app.bailout = true;
-                setTimeout(function() { app.bailout = false; }, 60000);
+                console.log('bailing in class characters');
+                setTimeout(function(app) { console.log('clearing bail in class characters'); app.bailout = false; }, 60000);
             }
         }
     } catch (e) { 
