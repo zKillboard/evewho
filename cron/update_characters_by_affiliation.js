@@ -73,11 +73,11 @@ async function parse(app, res, map) {
             let prev = await app.mysql.query('select corporation_id, alliance_id, faction_id from ew_characters where character_id = ?', char_id);
             prev = prev[0];
 
-            if (info.corporation_id != prev.corporation_id || info.alliance_id != prev.alliance_id) {
+            if (info.corporation_id != prev.corporation_id || info.alliance_id != prev.alliance_id || info.faction_id != prev.faction_id) {
                 if (info.corporation_id == 1000001) {
                     await app.mysql.query('update ew_characters set corporation_id = 1000001, alliance_id = 0, faction_id = 0 where character_id = ?', [char_id]);
                 }
-                await app.mysql.query('update ew_characters set recent_change = 1 where character_id = ?', [char_id]);
+                await app.mysql.query('update ew_characters set recent_change = 1, corporation_id = ?, alliance_id = ?, faction_id = ? where character_id = ?', [info.corporation_id, info.alliance_id, info.faction_id, char_id]);
 
                 updates_required++;
             }

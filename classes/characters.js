@@ -5,7 +5,7 @@ let parse = async function(app, res, char_id, url) {
             var body = JSON.parse(res.body);
 
             await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
-            let r = await app.mysql.query('update ew_characters set faction_id = ?, alliance_id = ?, corporation_id = ?, name = ?, sec_status = ? where character_id = ?', [body.faction_id || 0, body.alliance_id || 0, body.corporation_id || 0, body.name, body.security_status || 0, char_id]);
+            let r = await app.mysql.query('update ew_characters set alliance_id = ?, corporation_id = ?, name = ?, sec_status = ? where character_id = ?', [body.alliance_id || 0, body.corporation_id || 0, body.name, body.security_status || 0, char_id]);
             if (r.changedRows > 0) {
                 await app.mysql.query('update ew_characters set history_added = 0 where character_id = ?', [char_id]);
                 await app.mysql.query('update ew_corporations set recalc = 1 where corporation_id = ?', [body.corporation_id || 0]);
