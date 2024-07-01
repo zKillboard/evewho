@@ -8,15 +8,15 @@ mixin sec_status(title, contents, type)
         tr
           th.image
           th.name Name
-          th.count Members
-          th.delta Sec.
+          th.align-right.count Members
+          th.align-right.delta Sec.
       tbody
         if contents != undefined
           each val in contents
             tr
               td.image 
-                +image(type, val.id)
+                +image(type, val.id, 64, val.name)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
-              td.count.number= val.memberCount
-              td.delta.numberd= val.avg_sec_status
+              td.align-right.count.number= val.memberCount
+              td.align-right.delta.numberd= val.avg_sec_status
