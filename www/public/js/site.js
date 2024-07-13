@@ -24,6 +24,13 @@ $(document).ready(function() {
     if (tbody.length && tbody.attr('corp_id') == undefined) $('#loadMore').remove();
 
     loadNextPage();
+
+    // Listen for / key, if pressed, put focus on search box (#autocomplete)
+    $(document).keyup(function(e) {
+        if ($("input:focus, textarea:focus").length === 0 && e.key === '/' && e.ctrlKey !== true && e.shiftKey !== true) {
+            $("#autocomplete").focus();
+        }
+    });
 });
 
 function changeWhich(event) {
