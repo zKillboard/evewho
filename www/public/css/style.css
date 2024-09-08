@@ -57,18 +57,18 @@ html {
 /* invert filter based dark mode */
 body.dark{
     background-color: black;
-    filter: invert(1);
 }
 
-body.dark img, body.dark iframe {
+.inverse {
     filter: invert(1);
 }
 
 .eveimage {
     background-color: #222;
+    filter: invert(1);
 }
 
-@media only screen and (min-width: 1580px) {
+@media only screen and (min-width: 1440px) {
     .left-sticky-ad {
         position: fixed;
         top: 50px;

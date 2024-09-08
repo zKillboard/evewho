@@ -4,6 +4,8 @@ $(document).ready(function() {
     $(".numberd").each(function(index) { $(this).html(new Number($(this).html()).toLocaleString(undefined, { minimumFractionDigits: 1 })) });
     lazyLoadInstance = new LazyLoad({elements_selector: ".lazy"}).update();
 
+    setInterval(setTopBannerHeight, 10000); 
+
     $('#autocomplete').autocomplete({
       autoSelectFirst: true,
       serviceUrl: '/autocomplete/',
@@ -68,5 +70,14 @@ function addHistoryData(tbody, data) {
         $("#loadMore").prop('disabled', false).blur();
     } else {
         $("#loadMore").hide();
+    }
+}
+
+var lastHeight = 0;
+function setTopBannerHeight() {
+    let height = document.getElementById('topbanner').clientHeight;
+    if (height > lastHeight) {
+        $("#topbanner").css('height', height).css('min-height', height);
+        lastHeight = height;
     }
 }
