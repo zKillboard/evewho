@@ -12,7 +12,7 @@ async function f(app) {
         if (max_char_id === undefined) {
             max_char_id = await app.mysql.queryField('char_id', 'select max(character_id) char_id from ew_characters where character_id > 2112000000 and character_id < 2200000000');
         }
-        let delta = Math.floor(Math.random() * 10) + 1;
+        let delta = Math.floor(Math.random() * 100) + 1;
         let next_id = max_char_id + delta;
 
         let res = await app.phin('https://esi.evetech.net/v5/characters/' + next_id + '/');

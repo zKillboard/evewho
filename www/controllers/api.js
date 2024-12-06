@@ -19,7 +19,7 @@ async function getChar(req, res) {
   let info = await app.mysql.query('select character_id, corporation_id, alliance_id, faction_id, name, sec_status from ew_characters where character_id = ? limit 1', req.params.id);
   if (info.length == 0) return {status_code: 404} // 404;
 
-  let history = await app.mysql.query('select corporation_id, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history where character_id = ?', req.params.id); 
+  let history = await app.mysql.query('select record_id, corporation_id, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history where character_id = ?', req.params.id); 
 
   return { json: { info: info, history: history }};
 }

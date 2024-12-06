@@ -21,7 +21,7 @@ let parse = async function(app, res, char_id, url) {
                 var body = JSON.parse(res.body);
                 if (body.error == 'Character has been deleted!') {
                     let r = await app.mysql.query('update ew_characters set history_added = 1, lastUpdated = now(), recent_change = 0, faction_id = 0, alliance_id = 0, corporation_id = 1000001 where character_id = ?', [char_id]);
-                    return await app.sleep(1000);
+                    return await app.sleep(10000);
                 }
             }
             if (res.statusCode == 404) {
@@ -36,7 +36,14 @@ let parse = async function(app, res, char_id, url) {
             if (res.statusCode == 420) {
                 app.bailout = true;
                 console.log('bailing in class characters');
-                setTimeout(function(app) { console.log('clearing bail in class characters'); app.bailout = false; }, 60000);
+                let i = 300;
+                while (i > 0) {
+                    console.log(i);
+                    await app.sleep(1000);
+                    i--;
+                }
+                console.log('clearing bail in class characters');
+                app.bailout = false;
             }
         }
     } catch (e) { 

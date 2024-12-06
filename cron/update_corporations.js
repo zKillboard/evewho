@@ -15,6 +15,7 @@ async function f(app) {
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
         if (app.error_count > 0) break;
+        if (app.util.isDowntime()) return;
 
         let row = corps[i];
         let corp_id = row.corporation_id;
@@ -26,7 +27,7 @@ async function f(app) {
 
         //let sleep = 100 + (app.error_count * 1000);
         //await app.sleep(sleep); // Limit to 10/s + time for errors
-           break;
+        break;
     }
 
     //await Promise.all(promises).catch();
@@ -55,7 +56,7 @@ async function parse(app, res, corp_id, url) {
             if (res.statusCode == 420) {
                 app.bailout = true;
                 console.log('bailing in update_corporatoins');
-                setTimeout(function(app) { console.log('clearing bailout inupdate_corporations'); app.bailout = false; }, 60000);
+                setTimeout(function(app) { process.exit(); }, 60000);
             }
         }
     } catch (e) { 

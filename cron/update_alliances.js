@@ -14,6 +14,8 @@ async function f(app) {
     let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < allis.length; i++ ){
         if (app.bailout == true) break;
+        if (app.error_count > 0) break;
+        if (app.util.isDowntime()) return;
 
         let row = allis[i];
         let alli_id = row.alliance_id;
@@ -24,8 +26,6 @@ async function f(app) {
         let corpurl = 'https://esi.evetech.net/v1/alliances/' + alli_id + '/corporations/'
         promises.push(app.phin(corpurl).then(res => { parse_corps(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
-        //let sleep = 200 + (app.error_count * 1000);
-        //await app.sleep(sleep); // Limit to 5/s + time for errors
     }
 
     await Promise.all(promises).catch();
@@ -51,8 +51,8 @@ async function parse(app, res, alli_id, url) {
 
         if (res.statusCode == 420) {
             app.bailout = true;
-            console.log('bailong in update_alliances');
-            setTimeout(function(app) { console.log('clearing bailout in update_alliances'); app.bailout = false; }, 60000);
+            console.log('bailing in update_alliances');
+            setTimeout(function(app) { process.exit(); }, 60000);
         }
     }
   } catch (e) { 
