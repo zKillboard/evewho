@@ -51,6 +51,8 @@ let parse = async function(app, res, char_id, url) {
     }
 }
 
+let corps_set = new Set();
+setInterval(() => corps_set.clear(), 9600);
 let parse_corps = async function(app, res, char_id, url) {
     try {
         if (res.statusCode == 200) {
@@ -60,6 +62,10 @@ let parse_corps = async function(app, res, char_id, url) {
             for (let i = 0; i < body.length; i++) {
                 let row = body[i];
                 let nextrow = (i < (body.length - 1) ? body[i + 1] : {});
+                if (!corps_set.has(row.corporation_id)) {
+                    await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [row.corporation_id]);
+                    corps_set.add(row.corporation_id);
+                }
                 await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date, end_date, corp_number) values (?, ?, ?, ?, date_sub(?, interval 1 minute), ?)', [row.record_id, char_id, row.corporation_id, row.start_date, nextrow.start_date, corp_number]);
                 corp_number++;
             }

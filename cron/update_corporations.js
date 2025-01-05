@@ -8,26 +8,23 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
-    let second = Math.round(Date.now() / 1000);
-    if ((second % 60) > 30) return;
-
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 100');
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and memberCount > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true) break;
         if (app.error_count > 0) break;
-        if (app.util.isDowntime()) return;
+        if (app.util.isDowntime()) break;
 
         let row = corps[i];
         let corp_id = row.corporation_id;
+        await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', corp_id);
         if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) continue;
 
         let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
-        if (corp_id == 98591742) url = 'https://esi.evetech.net/v4/corporations/' + corp_id + '/';
+console.log('corp', corp_id);
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
 
-        //let sleep = 100 + (app.error_count * 1000);
+        //let sleep = 300 + (app.error_count * 1000);
         //await app.sleep(sleep); // Limit to 10/s + time for errors
-        break;
     }
 
     //await Promise.all(promises).catch();
