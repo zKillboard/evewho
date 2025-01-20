@@ -10,9 +10,9 @@ async function f(app) {
 
     let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < allis.length; i++ ){
-        if (app.bailout == true) break;
         if (app.error_count > 0) break;
         if (app.util.isDowntime()) return;
+        if (app.pause420 == true) return;
 
         let row = allis[i];
         let alli_id = row.alliance_id;
@@ -49,9 +49,9 @@ async function parse(app, res, alli_id, url) {
         setTimeout(function() { app.error_count--; }, 1000);
 
         if (res.statusCode == 420) {
-            app.bailout = true;
-            console.log('bailing in update_alliances');
-            setTimeout(function(app) { process.exit(); }, 60000);
+            app.pause420 = true;
+            await app.sleep(120000);
+            app.pause420 = true;
         }
     }
   } catch (e) { 

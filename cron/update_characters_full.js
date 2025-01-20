@@ -6,7 +6,7 @@ module.exports = {
 const characters = require('../classes/characters.js');
 
 async function f(app) {
-    if (app.util.isDowntime() || app.bailout == true) return;
+    if (app.util.isDowntime() || app.pause420 == true) return;
 
     let second = Math.round(Date.now() / 1000);
 

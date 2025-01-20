@@ -12,10 +12,7 @@ async function f(app) {
 
     let chars = await app.mysql.query('select character_id, name from ew_characters where name != "" and history_added = 0 limit 3');
     for (let i = 0; i < chars.length; i++ ){
-        if (app.bailout == true) {
-            console.log('bailing');
-            break;
-        }
+        if (app.pause420 == true) break;
         if (app.error_count > 0) break;
 
         let row = chars[i];

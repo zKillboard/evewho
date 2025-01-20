@@ -15,10 +15,7 @@ async function f(app) {
 
     let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated = 0 and recent_change = 0 and corporation_id != 1000001 order by lastUpdated limit 10000');
     for (let i = 0; i < chars.length; i++ ) {
-        if (app.bailout == true) {
-            console.log('bailing');
-            break;
-        }
+        if (app.pause420 == true) break;
 
         let row = chars[i];
         let char_id = row.character_id;

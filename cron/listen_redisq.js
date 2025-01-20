@@ -6,7 +6,7 @@ module.exports = {
 const entity = require('../classes/entity.js');
 
 async function f(app) {
-    let url = 'https://redisq.zkillboard.com/listen.php?ttl=5&queueID=' + process.env.redisqID;
+    let url = 'https://redisq.zkillboard.com/listen.php?ttw=5&queueID=' + process.env.redisqID;
     try {
         do {
             let res = await app.phin(url);

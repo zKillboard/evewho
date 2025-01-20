@@ -10,7 +10,7 @@ async function f(app) {
 
     let corps = await app.mysql.query('select corporation_id from ew_corporations where corporation_id > 0 and memberCount > 0 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < corps.length; i++ ){
-        if (app.bailout == true) break;
+        if (app.pause420 == true) break;
         if (app.error_count > 0) break;
         if (app.util.isDowntime()) break;
 
@@ -51,9 +51,9 @@ async function parse(app, res, corp_id, url) {
             setTimeout(function() { app.error_count--; }, 1000);
 
             if (res.statusCode == 420) {
-                app.bailout = true;
-                console.log('bailing in update_corporatoins');
-                setTimeout(function(app) { process.exit(); }, 60000);
+                app.pause420 = true;
+                await app.sleep(120000);
+                app.pause420 = false;
             }
         }
     } catch (e) { 

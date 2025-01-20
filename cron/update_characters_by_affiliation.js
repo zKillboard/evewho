@@ -31,9 +31,9 @@ async function f(app) {
                 map[char_id] = chars[i];
 
                 if (char_array.length >= 1000) break;
-                if (app.bailout == true) break;
+                if (app.pause420 == true) break;
             }
-            if (app.bailout == true) return;
+            if (app.pause420 == true) return;
             if (char_array.length == 0) return;
             console.log('Aff. Checking', char_array.length, 'characters');
 
