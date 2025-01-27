@@ -72,7 +72,7 @@ async function getCorpJoined(req, res) {
   
   if (info.length == 0) return {status_code: 404} // 404;
 
-  query = 'select character_id id, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history where h.corporation_id = ? order by start_date desc limit 500'
+  query = 'select character_id id, date_format(start_date, "%Y/%m/%d %H:%i") start_date, date_format(end_date, "%Y/%m/%d %H:%i") end_date from ew_history where corporation_id = ? order by start_date desc limit 500'
   
   const result = await app.mysql.query(query, [req.params.id]) 
   
