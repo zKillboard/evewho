@@ -9,15 +9,13 @@ async function f(app) {
         result = await app.mysql.query('select * from ew_corporations where recalc = 1 limit 100');
         for (let i = 0; i < result.length; i++) {
             let row = result[i];
-            //console.log('Recalcing corp ' + row.corporation_id);
-
             let active, info;
             if (parseInt(row.corporation_id) < 1999999) {
                 active = 9;
                 info = await app.mysql.queryRow('select count(1) count, 0 avg_sec_status from ew_characters where corporation_id =?', [row.corporation_id]);
             } else {
                 active = await app.mysql.queryField('count', 'select count(1) count from ew_history where start_date >= date_sub(now(), interval 3 month) and corporation_id = ?', [row.corporation_id]);
-                info = await app.mysql.queryRow('select count(1) count, avg(sec_status) avg_sec_status from ew_characters where corporation_id =?', [row.corporation_id]);
+                info = await app.mysql.queryRow('select count(1) count, avg(sec_status) avg_sec_status from ew_characters where corporation_id = ?', [row.corporation_id]);
             }
             let activity_level = Math.max(0, Math.min(9, Math.floor(Math.log(active))));
 

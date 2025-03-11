@@ -10,7 +10,7 @@ async function f(app) {
 
     let allis = await app.mysql.query('select alliance_id from ew_alliances where alliance_id > 100 and lastUpdated < date_sub(now(), interval 1 day) order by lastUpdated limit 1');
     for (let i = 0; i < allis.length; i++ ){
-        if (app.error_count > 0) break;
+        if (app.bailout == true || app.error_count > 0) break;
         if (app.util.isDowntime()) return;
         if (app.pause420 == true) return;
 

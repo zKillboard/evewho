@@ -1,12 +1,13 @@
 module.exports = {
     exec: f,
-    span: 60
+    span: 60,
+    offset: 30
 }
 
 var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } });
 
 var m = false;
-var aff = 'evewho:affiliates';
+var aff = 'evewho:affiliates:recent';
 
 async function f(app) {
     if (app.util.isDowntime()) return;
@@ -33,7 +34,7 @@ async function f(app) {
             }
             if (app.pause420 == true) return;
             if (char_array.length == 0) return;
-            console.log('Aff. Checking', char_array.length, 'characters');
+            console.log('Recent Aff. Checking', char_array.length, 'characters');
 
             let url = 'https://esi.evetech.net/v1/characters/affiliation/'
             let data = JSON.stringify(char_array);
