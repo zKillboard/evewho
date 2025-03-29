@@ -1,7 +1,6 @@
 module.exports = {
     exec: f,
-    span: 60,
-    offset: 30
+    span: 15
 }
 
 var phin = require('phin').defaults({'headers': { 'User-Agent': 'evewho.com' } });

@@ -59,6 +59,9 @@ async function parse(app, res, map) {
             let prev = await app.mysql.query('select corporation_id, alliance_id, faction_id, lastEmploymentChange from ew_characters where character_id = ?', char_id);
             prev = prev[0];
 
+            if (info.corporation_id > 100) await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [info.corporation_id || 0]);
+            if (info.alliance_id > 10000) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [info.alliance_id || 0]);
+
             let history = await app.mysql.query('select start_date from ew_history where character_id = ? order by record_id desc limit 1', char_id);
             if (history.length > 0) {
                 await app.mysql.query('update ew_characters set lastEmploymentChange = ? where character_id = ?', [history[0].start_date, char_id]);

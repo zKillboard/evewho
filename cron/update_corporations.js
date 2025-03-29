@@ -33,7 +33,6 @@ async function parse(app, res, corp_id, url) {
     try {
         if (res.statusCode == 200) {
             var body = JSON.parse(res.body);
-            //console.log('Updating corp ' + corp_id);
 
             let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
             await app.mysql.query('update ew_corporations set recalc = ?, lastUpdated = now() where corporation_id = ?', [(r.changedRows > 0 ? 1 : 0), corp_id]);

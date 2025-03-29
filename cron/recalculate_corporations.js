@@ -12,7 +12,7 @@ async function f(app) {
             let active, info;
             if (parseInt(row.corporation_id) < 1999999) {
                 active = 9;
-                info = await app.mysql.queryRow('select count(1) count, 0 avg_sec_status from ew_characters where corporation_id =?', [row.corporation_id]);
+                info = await app.mysql.queryRow('select 9999999 count, 0 avg_sec_status from ew_characters where corporation_id = ?', [row.corporation_id]);
             } else {
                 active = await app.mysql.queryField('count', 'select count(1) count from ew_history where start_date >= date_sub(now(), interval 3 month) and corporation_id = ?', [row.corporation_id]);
                 info = await app.mysql.queryRow('select count(1) count, avg(sec_status) avg_sec_status from ew_characters where corporation_id = ?', [row.corporation_id]);

@@ -9,7 +9,7 @@ var m = false;
 var date = undefined;
 
 const affLong = 'select character_id, lastAffUpdated from ew_characters where lastAffUpdated <= date_sub(now(), interval 1 day) order by lastAffUpdated limit 1000';
-const affRecent = 'select * from (select character_id, lastAffUpdated from ew_characters where lastEmploymentChange  >= date_sub(now(), interval 5 year) order by lastEmploymentChange desc) as f where lastAffUpdated < date_sub(now(), interval 1 day) limit 10000';
+const affRecent = 'select character_id from ew_characters force index(lastAffUpdated_2)  where lastEmploymentChange >= date_sub(now(), interval 5 year) order by lastAffUpdated limit 250000';
  
 const bucketLong = 'evewho:affiliates';
 const bucketRecent = 'evewho:affiliates:recent';
@@ -38,6 +38,5 @@ async function populate(app, query, bucket) {
 
         await app.redis.sadd('evewho:affiliates:full', row.character_id);
         await app.redis.sadd(bucket, row.character_id);
-        await app.mysql.query('update ew_characters set lastAffUpdated = now() where character_id = ?', row.character_id);
     }
 }
