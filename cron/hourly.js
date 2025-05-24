@@ -6,6 +6,7 @@ module.exports = {
 async function f(app) {
     let mysql = app.mysql;
     let redis = app.redis;
+    await mysql.query('update ew_corporations set is_npc_corp = 1 where corporation_id < 1999999 and is_npc_corp = 0');
 
     await mysql.query("update ew_characters set name_phonetic = soundex(name) where name_phonetic is null");
     await mysql.query("update ew_corporations set name_phonetic = soundex(name) where name_phonetic is null");
