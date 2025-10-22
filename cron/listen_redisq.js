@@ -1,25 +1,24 @@
 module.exports = {
     exec: f,
-    span: 15
+    span: 1
 }
 
 const entity = require('../classes/entity.js');
 
 async function f(app) {
-    let url = 'https://zkillredisq.stream/listen.php?ttw=5&queueID=' + process.env.redisqID;
+    let url = 'https://zkillredisq.stream/listen.php?queueID=' + process.env.redisqID;
     try {
-        do {
-            let res = await app.phin(url);
-            var body = JSON.parse(res.body);
+            var res = await app.phin({url: url, followRedirects: true, parse: 'text'});
+            var raw = res.body.toString();
+            var body = JSON.parse(raw);
             if (body.package !== null) {
                 await add_entities(app, body.package.killmail.victim);
                 for (let i = 0; i < body.package.killmail.attackers.length; i++) {
                     await add_entities(app, body.package.killmail.attackers[i]);
                 }
             }
-        } while (body.package !== null); 
-    } catch (e) {
-        // Just ignore the error, try again later
+	} catch (e) {
+        console.log(e);
     }
 }
 
@@ -32,3 +31,4 @@ async function add_entities(app, block) {
 async function add_entity(app, type, id) {
     await entity.add(app, type, id);
 }
+
