@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
 --
 -- Host: localhost    Database: evewho
 -- ------------------------------------------------------
--- Server version	8.0.41-0ubuntu0.22.04.1
+-- Server version	8.0.43-0ubuntu0.22.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -49,7 +49,8 @@ CREATE TABLE `ew_alliances` (
   KEY `avg_sec_status` (`avg_sec_status`),
   KEY `ticker` (`ticker`),
   KEY `name_phonetic` (`name_phonetic`),
-  KEY `recalc` (`recalc`)
+  KEY `recalc` (`recalc`),
+  KEY `idx_prefix` (`name`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -73,6 +74,7 @@ CREATE TABLE `ew_characters` (
   `lastAffUpdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `recent_change` int DEFAULT '1',
   `lastEmploymentChange` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `lastNameUpdate` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   UNIQUE KEY `character_id` (`character_id`),
   KEY `corporation_id` (`corporation_id`),
   KEY `alliance_id` (`alliance_id`),
@@ -89,7 +91,8 @@ CREATE TABLE `ew_characters` (
   KEY `corporation_id_4` (`corporation_id`,`recent_change`,`lastUpdated`,`lastAffUpdated`,`lastEmploymentChange`),
   KEY `lastEmploymentChange` (`lastEmploymentChange`),
   KEY `lastEmploymentChange_2` (`lastEmploymentChange`,`lastAffUpdated`),
-  KEY `lastAffUpdated_2` (`lastAffUpdated`,`lastEmploymentChange`)
+  KEY `lastAffUpdated_2` (`lastAffUpdated`,`lastEmploymentChange`),
+  KEY `idx_prefix` (`name`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -141,7 +144,8 @@ CREATE TABLE `ew_corporations` (
   KEY `lastUpdated_2` (`lastUpdated`),
   KEY `memberCount` (`memberCount`),
   KEY `recalc` (`recalc`),
-  KEY `npc_alli` (`is_npc_corp`,`alliance_id`)
+  KEY `npc_alli` (`is_npc_corp`,`alliance_id`),
+  KEY `idx_prefix` (`name`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -191,4 +195,4 @@ CREATE TABLE `ew_history` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-29 15:15:08
+-- Dump completed on 2025-10-22 13:42:30
