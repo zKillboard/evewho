@@ -31,11 +31,14 @@ async function update_names(app, characterIDs) {
         let names = await app.phin(params);
         let namesJson = JSON.parse(names.body);
 	
+        let changeCount = 0;
 		let updatePromises = namesJson.map(async (entry) => {
 			if (entry.category === 'character') {
-				await app.mysql.query('UPDATE ew_characters SET name = ?, name_phonetic = soundex(?), lastNameUpdate = NOW() WHERE character_id = ?', [entry.name, entry.name, entry.id]);
+				let result = await app.mysql.query('UPDATE ew_characters SET name = ?, name_phonetic = soundex(?), lastNameUpdate = NOW() WHERE character_id = ?', [entry.name, entry.name, entry.id]);
+                changeCount += result.affectedRows;
 			}
 		});
+        if (changeCount > 0) console.log(`${changeCount} names updated`);
 	
 		await Promise.all(updatePromises);
 	} catch (e) {
