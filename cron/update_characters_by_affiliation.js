@@ -33,7 +33,6 @@ async function f(app) {
             }
             if (app.pause420 == true) return;
             if (char_array.length == 0) return;
-            console.log('Aff. Checking', char_array.length, 'characters');
 
             let url = 'https://esi.evetech.net/v1/characters/affiliation/'
             let data = JSON.stringify(char_array);

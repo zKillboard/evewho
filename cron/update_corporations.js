@@ -20,7 +20,6 @@ async function f(app) {
         if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp-id); continue; }
 
         let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
-        console.log('corp', corp_id);
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
 
         await app.sleep(1000);

@@ -22,7 +22,6 @@ async function f(app) {
         }
         let row = chars[i];
         let url = 'https://esi.evetech.net/v5/characters/' + row.character_id + '/';
-        console.log(url);
 		awaits.push(app.phin(url).then(res => { characters.parse(app, res, row.character_id, url); }).catch(e => { console.log('error in phin', e); }));
         if (awaits.length >= 10) break;
 	}

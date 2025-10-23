@@ -18,7 +18,6 @@ async function f(app) {
         let alli_id = row.alliance_id;
 
         await app.mysql.query('update ew_alliances set lastUpdated = now() where alliance_id = ?', alli_id);
-        console.log('alli', alli_id);
         let url = 'https://esi.evetech.net/v4/alliances/' + alli_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
