@@ -3,8 +3,22 @@ module.exports = {
 	span: 1
 }
 
+const sql = `
+(SELECT character_id FROM ew_characters 
+  WHERE lastEmploymentChange >= DATE_SUB(NOW(), INTERVAL 5 YEAR) 
+    AND lastNameUpdate < DATE_SUB(NOW(), INTERVAL 1 DAY) 
+  LIMIT 1000)
+UNION
+(SELECT character_id FROM ew_characters 
+  WHERE lastEmploymentChange < DATE_SUB(NOW(), INTERVAL 5 YEAR) 
+    AND lastNameUpdate < DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+  LIMIT 1000)
+LIMIT 1000;
+`;
+
+
 async function f(app) {
-	let rows = await app.mysql.query('SELECT character_id FROM ew_characters WHERE lastNameUpdate < DATE_SUB(NOW(), INTERVAL 24 HOUR) LIMIT 1000');
+	let rows = await app.mysql.query(sql);
 	let characterIDs = rows.map(r => r.character_id);
 	if (characterIDs.length > 0) await update_names(app, characterIDs);
 }
