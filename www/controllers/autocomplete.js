@@ -4,8 +4,6 @@ module.exports = {
 }
 
 
-const utf8 = require('utf8');
-
 async function getData(req, res) {
   const app = req.app.app;
   
@@ -16,7 +14,7 @@ async function getData(req, res) {
     throw new Error(`Invalid query parameter: "${query}" must be lowercase. Received mixed case input.`);
   }
   
-  const name = utf8.encode(query);
+  const name = query;
 
   let result = [];
   let chars = search(res, app, 'character', name, false);

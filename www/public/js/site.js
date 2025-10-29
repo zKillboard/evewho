@@ -11,13 +11,62 @@ $(document).ready(function() {
       serviceUrl: function(query) {
         return '/autocomplete/' + encodeURIComponent(query.toLowerCase());
       },
-      paramName: '', // Don't add the query as a parameter since it's in the path
+      ajaxSettings: {
+        type: 'GET',
+        dataType: 'json',
+        data: {} // Override to send no data/parameters
+      },
+      params: {}, // No additional parameters
+      paramName: '', // Empty param name
       dataType: 'json',
       groupBy: 'groupBy',
+      minChars: 2, // Require at least 2 characters to reduce server load
+      deferRequestBy: 300, // Wait 300ms after user stops typing before making request
+      noCache: false, // Enable caching for better performance
+      maxHeight: 400, // Increase max height for more suggestions
+      showNoSuggestionNotice: true, // Show "no results" message
+      noSuggestionNotice: 'No characters, corporations, or alliances found', // Custom message
       onSelect: function (suggestion) {
           window.location = '/' + suggestion.data.type + '/' + suggestion.data.id;
       },
-      error: function(xhr) { console.log(xhr); }
+      onSearchStart: function(params) {
+        // Optional: Add loading indicator
+        $('#autocomplete').addClass('loading');
+      },
+      onSearchComplete: function(query, suggestions) {
+        // Remove loading indicator
+        $('#autocomplete').removeClass('loading');
+      },
+      onSearchError: function(query, jqXHR, textStatus, errorThrown) {
+        console.error('Autocomplete search failed:', {
+          query: query,
+          status: jqXHR.status,
+          statusText: textStatus,
+          error: errorThrown
+        });
+        
+        // Remove loading indicator
+        $('#autocomplete').removeClass('loading');
+        
+        // Show user-friendly error (optional)
+        if (jqXHR.status === 500) {
+          console.warn('Search temporarily unavailable');
+        } else if (jqXHR.status === 0) {
+          console.warn('Network connection issue');
+        }
+      },
+      transformResult: function(response, originalQuery) {
+        // Handle potential response parsing issues
+        try {
+          if (typeof response === 'string') {
+            response = JSON.parse(response);
+          }
+          return response;
+        } catch (e) {
+          console.error('Failed to parse autocomplete response:', e);
+          return { suggestions: [] };
+        }
+      }
     });
 
     $('[data-toggle="tooltip"]').tooltip({trigger: 'click', title: 'data', placement: 'top'});
