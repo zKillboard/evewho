@@ -8,7 +8,10 @@ $(document).ready(function() {
 
     $('#autocomplete').autocomplete({
       autoSelectFirst: true,
-      serviceUrl: '/autocomplete/',
+      serviceUrl: function(query) {
+        return '/autocomplete/' + encodeURIComponent(query.toLowerCase());
+      },
+      paramName: '', // Don't add the query as a parameter since it's in the path
       dataType: 'json',
       groupBy: 'groupBy',
       onSelect: function (suggestion) {

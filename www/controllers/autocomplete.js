@@ -1,5 +1,5 @@
 module.exports = {
-   paths: '/autocomplete/',
+   paths: '/autocomplete/:query',
    get: getData
 }
 
@@ -9,7 +9,14 @@ const utf8 = require('utf8');
 async function getData(req, res) {
   const app = req.app.app;
   
-  const name = utf8.encode(req.query.query);
+  const query = req.params.query;
+  
+  // Validate that query is lowercase only
+  if (query !== query.toLowerCase()) {
+    throw new Error(`Invalid query parameter: "${query}" must be lowercase. Received mixed case input.`);
+  }
+  
+  const name = utf8.encode(query);
 
   let result = [];
   let chars = search(res, app, 'character', name, false);

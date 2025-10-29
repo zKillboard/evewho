@@ -49,10 +49,6 @@ router.get('/pilot/:id', (req, res, next) => { res.send('/character/' + req.para
 router.get('/corp/:id', (req, res, next) => { res.send('/corporation/' + req.params.id); });
 router.get('/alli/:id', (req, res, next) => { res.send('/alliance/' + req.params.id); });
 
-// Search!
-router.get('/autocomplete/', async function(req, res, next) {
-  const controller = require(res.app.root + '/controllers/autocomplete.js');
-  await controller(req, res);
-});
+addGet('/autocomplete/:query', 'autocomplete');
 
 module.exports = router;
