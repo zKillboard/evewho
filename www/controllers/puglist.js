@@ -7,7 +7,7 @@ async function getData(req, res) {
 	const app = req.app.app;
 
 	let offset = 250 * (req.params.page - 1);
-	if (offset < 0 || offset > 10000) return { package: { characters: [], left: [], right: [] }, ttl: 86400}; // 204 No Content
+	if (offset < 0 || offset > 10000) return { package: { characters: [], left: [], right: [] }, ttl: 86400}; 
 	if (req.params.id < 1999999) return { package: { characters: [], left: [], right: [] }, ttl: 86400}; // Ignore NPC corps
 
 	let query, left = false, right = false;
