@@ -83,6 +83,11 @@ body.dark{
     filter: invert(1);
 }
 
+/* Cancel inversion for badge inside inverted container */
+.inverse .zz-badge {
+    filter: invert(1);
+}
+
 .eveimage {
     background-color: #222;
     filter: invert(1);
