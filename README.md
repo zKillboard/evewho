@@ -12,6 +12,9 @@ EveWho does provide a very basic API, here are some examples:
 
 The API is CORS enabled. If you're looking for more detailed information about entities please utilize Eve Online's ESI.
 
+If you receive 403 from your app but are fine in your browser (for the same URL), it may be becase CloudFlare can prevent your requests if they have no user-agent set. You need to add a user-agent header to your app request.
+
+
 ## FAQ
 
 **What does Delta mean?**
