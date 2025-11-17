@@ -1,44 +1,135 @@
-# EveWho
+# <img src="https://image.eveonline.com/Character/1_64.jpg" width="32" height="32" align="center"> EveWho
 
-EveWho allows you to view the members of Eve Online corporations and alliances, a resource that is not available within the game. Simply view a corporation or alliance to see current members.
+> Track EVE Online corporations, alliances, and character memberships in real-time
 
-### API
+EveWho provides comprehensive visibility into EVE Online's organizational structure, allowing you to view current members of corporations and alliances. This information is not readily available within the game itself.
 
-EveWho does provide a very basic API, here are some examples:
+[![Part of zz Suite](https://img.shields.io/badge/zz-Suite-blueviolet?style=flat-square)](https://zzeve.com)
 
-    https://evewho.com/api/character/1633218082
-    https://evewho.com/api/corplist/98330748
-    https://evewho.com/api/allilist/99006319
+## ✨ Features
 
-The API is CORS enabled. If you're looking for more detailed information about entities please utilize Eve Online's ESI.
+- 📊 **Real-time Membership Data** - View current members of any corporation or alliance
+- 📈 **Historical Tracking** - Monitor membership changes over time with delta calculations
+- 🔍 **Smart Search** - Autocomplete search for characters, corporations, and alliances
+- 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
+- 🌐 **Public API** - CORS-enabled API for integration with your tools
 
-If you receive 403 from your app but are fine in your browser (for the same URL), it may be because CloudFlare can prevent your requests if you have no user-agent set. You need to add a user-agent header to your app request.
+## 🔌 API
+
+EveWho provides a simple, CORS-enabled API for accessing character and organization data.
+
+### Endpoints
+
+```bash
+# Character information and history
+GET https://evewho.com/api/character/1633218082
+
+# Corporation member list
+GET https://evewho.com/api/corplist/98330748
+
+# Alliance member list
+GET https://evewho.com/api/allilist/99006319
+```
+
+### Rate Limiting
+
+To ensure fair usage and prevent abuse:
+- **Limit**: 10 requests per 30-second window
+- **User-Agent Required**: CloudFlare may block requests without a user-agent header
+
+> 💡 **Tip**: For more detailed ESI data, use [EVE Online's ESI API](https://developers.eveonline.com/api-explorer)
 
 
-## FAQ
+## 🛠️ Tech Stack
 
-**What does Delta mean?**
+- **Backend**: Node.js with [Fundamen](https://www.npmjs.com/package/fundamen) framework
+- **Database**: MySQL
+- **Cache**: Redis
+- **Frontend**: jQuery, Bootstrap 4, Pug templates
+- **Deployment**: PM2 process manager
 
-Delta is simply the difference in the number of pilots from 7 days ago. If 7 days ago a corp had 13 pilots, and today that corp has 18 pilots, then that corp would have a delta of 5.
+## 🚀 Getting Started
 
-**How did you get all this data? Are you scraping the API?**
+### Prerequisites
 
-No scraping happening and everything is happening within CCP's Terms of Service. For an explanation I'll link my post on the EVEO forums [here](https://forums-archive.eveonline.com/default.aspx?g=posts&m=83539). The official forum announcement can be found [here](https://forums.eveonline.com/default.aspx?g=posts&t=25940).
+```bash
+node >= 12.x
+mysql >= 5.7
+redis >= 5.0
+```
 
-**How do you determine the activity of a corporation?**
+### Installation
 
-By the number of new recruits in the last 90 days. The more recruits you have, the more likely it is that you're still active. Granted this system is far from perfect and doesn't take into account kills, losses, or corps that just don't recruit, however, the majority of active corporations do recruit at least one member every 90 days. Corporations that recruit fresh blood tend to be more active, of course, that's just my opinion!
+```bash
+# Clone the repository
+git clone https://github.com/zKillboard/evewho.git
+cd evewho
 
-**How do you determine the ranking for Pirate and Carebear Corporations?**
+# Install dependencies
+npm install
 
-The security status of every pilot in the corporation is averaged and then multiplied by the log of the number of pilots of the corporation.
+# Configure environment
+cp .env.example .env
+# Edit .env with your database and Redis credentials
 
-    corp_security_level = avg(sec_status) * log(memberCount)
-    
-**I don't like my pilot/corporation/alliance being listed on your website, remove it now!**
+# Run database migrations
+mysql -u root -p < setup/evewho.ddl
 
-All information available on this website is owned by CCP. If you'd like to see a name removed, please contact CCP at https://www.ccpgames.com/contact-us/ and fill out the request. If/when CCP changes the name within the game the game's API will reflect this change shortly after, once this happens the websites will pick up the name change and apply the name change to the website's database. 
+# Start the application
+npm start
+```
 
-**I'm using a tool to gather data from EveWho, why do I keep getting blocked?**
+## 📖 FAQ
 
-To help prevent folks from scraping EveWho and causing high loads a policy is in place that allows 10 requests within a 30 second time period. Anything more than this and you'll be shown an error page and forced to wait. We don't mind folks seeking more information, which is why an API is available.
+### What does Delta mean?
+
+Delta represents the change in membership over the past 7 days. For example:
+- Corp had 13 pilots 7 days ago
+- Corp has 18 pilots today
+- **Delta = +5** (5 new members)
+
+### How do you get all this data? Is it scraped?
+
+No scraping involved! All data collection complies with CCP's Terms of Service through:
+- Official EVE Online ESI API
+- Public character affiliation endpoints
+- Historical tracking of membership changes
+
+Learn more in the [official forum announcement](https://forums.eveonline.com/default.aspx?g=posts&t=25940).
+
+### How is corporation activity calculated?
+
+Activity is measured by recruitment activity in the last 90 days. While not perfect (doesn't account for kills/losses), it's a reliable indicator since most active corporations recruit regularly.
+
+### How are Pirate and Carebear rankings determined?
+
+Rankings use a weighted algorithm based on average security status:
+
+```javascript
+corp_security_level = avg(sec_status) * log(memberCount)
+```
+
+This balances individual pilot security status with corporation size.
+
+### Can I remove my pilot/corporation from the site?
+
+All data is owned by CCP Games and obtained through their official APIs. To request name changes or removal:
+1. Contact [CCP Games](https://www.ccpgames.com/contact-us/)
+2. Once changed in-game, it will automatically update via ESI
+3. EveWho will reflect the changes within 24 hours
+
+### Why am I getting blocked when using automated tools?
+
+To prevent abuse and maintain performance:
+- **Rate Limit**: 10 requests per 30 seconds
+- **Solution**: Use the public API endpoints instead of scraping
+- **Best Practice**: Implement proper rate limiting in your tools
+
+## 📝 License
+
+This project is part of the [zz Suite](https://zzeve.com) of EVE Online tools.
+
+---
+
+**EVE Online** and all associated logos and designs are the intellectual property of CCP hf.  
+EveWho is not affiliated with or endorsed by CCP Games.
