@@ -8,17 +8,29 @@ html
     
     // OpenGraph tags
     meta(property='og:title', content= 'Eve Who - ' + title)
-    meta(property='og:description', content= 'Eve Who - ' + title)
-    meta(property='og:site_name', content='Eve Who')
-    meta(property='og:type', content='website')
     if details && details.character_id
+      - var desc = title
+      if details.corp_name
+        - desc += ' [' + details.corp_name + '] '
+      if details.alli_name
+        - desc += ' <' + details.alli_name + '>'
+      meta(property='og:description', content= desc)
       meta(property='og:image', content= 'https://images.evetech.net/characters/' + details.character_id + '/portrait?size=256')
     else if details && details.corporation_id && !details.character_id
+      - var desc = title + ' (' + details.memberCount + ' members)'
+      if details.alli_name
+        - desc += ' <' + details.alli_name + '>'
+      meta(property='og:description', content= desc)
       meta(property='og:image', content= 'https://images.evetech.net/corporations/' + details.corporation_id + '/logo?size=256')
     else if details && details.alliance_id && !details.corporation_id
+      - var desc = title + ' (' + details.memberCount + ' members, ' + details.corp_count + ' corporations)'
+      meta(property='og:description', content= desc)
       meta(property='og:image', content= 'https://images.evetech.net/alliances/' + details.alliance_id + '/logo?size=256')
     else
+      meta(property='og:description', content= 'Eve Who - ' + title)
       meta(property='og:image', content='https://image.eveonline.com/Character/1_256.jpg')
+    meta(property='og:site_name', content='Eve Who')
+    meta(property='og:type', content='website')
     meta(name='twitter:card', content='summary')
     
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
