@@ -11,15 +11,15 @@ html
     if details && details.character_id
       - var desc = title
       if details.corp_name
-        - desc += ' [' + details.corp_name + '] '
+        - desc += '\nCorporation: ' + details.corp_name
       if details.alli_name
-        - desc += ' <' + details.alli_name + '>'
+        - desc += '\nAlliance: ' + details.alli_name
       meta(property='og:description', content= desc)
       meta(property='og:image', content= 'https://images.evetech.net/characters/' + details.character_id + '/portrait?size=256')
     else if details && details.corporation_id && !details.character_id
       - var desc = title + ' (' + details.memberCount + ' members)'
       if details.alli_name
-        - desc += ' <' + details.alli_name + '>'
+        - desc += '\nAlliance: ' + details.alli_name
       meta(property='og:description', content= desc)
       meta(property='og:image', content= 'https://images.evetech.net/corporations/' + details.corporation_id + '/logo?size=256')
     else if details && details.alliance_id && !details.corporation_id
