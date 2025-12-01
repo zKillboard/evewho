@@ -13,9 +13,9 @@ async function f(app) {
 		var body = JSON.parse(raw);
 		if (body.package !== null) {
 			if (body.package.killmail === undefined) {
-				res = await fetch(body.package.zkb.href);
-				body.package.killmail = await res.json();
-				console.log(body.package);
+				let res = await app.phin(body.package.zkb.href);
+				let json = JSON.parse(res.body);
+				body.package.killmail = json;
 			}
 			await add_entities(app, body.package.killmail.victim);
 			for (let i = 0; i < body.package.killmail.attackers.length; i++) {
