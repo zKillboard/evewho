@@ -1,6 +1,19 @@
 const mysql = require( 'mysql' );
+const url = require( 'url' );
+
 class Database {
 	constructor( config ) {
+		// Support both connection string and config object
+		if (typeof config === 'string') {
+			const parsed = new url.URL(config);
+			config = {
+				host: parsed.hostname,
+				user: parsed.username,
+				password: parsed.password,
+				database: parsed.pathname.slice(1),
+				port: parsed.port || 3306
+			};
+		}
 		//this.connection = mysql.createConnection( config );
         this.connection  = mysql.createPool( config );
 	}
