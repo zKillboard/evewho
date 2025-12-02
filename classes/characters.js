@@ -59,7 +59,10 @@ let parse_corps = async function(app, res, char_id, url) {
                     await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [row.corporation_id]);
                     corps_set.add(row.corporation_id);
                 }
-                await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date, end_date, corp_number) values (?, ?, ?, ?, date_sub(?, interval 1 minute), ?)', [row.record_id, char_id, row.corporation_id, row.start_date, nextrow.start_date, corp_number]);
+                // Convert ISO 8601 datetime to MySQL datetime format
+                const startDate = row.start_date ? row.start_date.replace('T', ' ').replace('Z', '') : null;
+                const endDate = nextrow.start_date ? nextrow.start_date.replace('T', ' ').replace('Z', '') : null;
+                await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date, end_date, corp_number) values (?, ?, ?, ?, date_sub(?, interval 1 minute), ?)', [row.record_id, char_id, row.corporation_id, startDate, endDate, corp_number]);
                 corp_number++;
             }
             await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
