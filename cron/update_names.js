@@ -24,6 +24,7 @@ async function f(app) {
 }
 
 async function update_names(app, characterIDs) {
+	if (!characterIDs) return;
 	try {
         let url = 'https://esi.evetech.net/universe/names';
         let data = JSON.stringify(characterIDs);
