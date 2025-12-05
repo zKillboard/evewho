@@ -19,8 +19,8 @@ async function f(app) {
         try {
             m = true;
 
-            if (await getCount(app, bucketLong) == 0) await populate(app, affLong, bucketLong);
-            if (await getCount(app, bucketRecent) == 0) await populate(app, affRecent, bucketRecent);
+            if (await getCount(app, bucketLong) === 0) await populate(app, affLong, bucketLong);
+            if (await getCount(app, bucketRecent) === 0) await populate(app, affRecent, bucketRecent);
         } finally {
             m = false;
         }
