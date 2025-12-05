@@ -36,7 +36,6 @@ async function populate(app, query, bucket) {
     for (let i = 0; i < chars.length; i++) {
         var row = chars[i];
 
-        await app.redis.sadd('evewho:affiliates:full', row.character_id);
-        await app.redis.sadd(bucket, row.character_id);
+		await app.redis.sadd(bucket, row.character_id);
     }
 }
