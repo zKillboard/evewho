@@ -8,7 +8,7 @@ const entity = require('../classes/entity.js');
 async function f(app) {
     let promises = [];
 
-    let corps = await app.mysql.query('select corporation_id from ew_corporations where lastUpdated = 0 or (corporation_id > 0 and memberCount > 0 and lastUpdated < date_sub(now(), interval 1 day)) order by lastUpdated limit 5');
+    let corps = await app.mysql.query('select corporation_id from ew_corporations where lastUpdated <= "1970-01-01 00:00:01" or (corporation_id > 0 and memberCount > 0 and lastUpdated < date_sub(now(), interval 1 day)) order by lastUpdated limit 5');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true || app.pause420 == true) break;
         if (app.error_count > 0) break;

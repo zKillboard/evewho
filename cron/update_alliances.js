@@ -64,7 +64,7 @@ async function parse_corps(app, res, alli_id, url) {
             var body = JSON.parse(res.body);
             if (body.length == 0) {
                 await app.mysql.query('update ew_corporations set alliance_id = 0 where alliance_id = ?', [alli_id]);
-                await app.mysql.query('update ew_characters set lastAffUpdated = 0 where alliance_id = ?', [alli_id]);
+                await app.mysql.query('update ew_characters set lastAffUpdated = "1970-01-01 00:00:01" where alliance_id = ?', [alli_id]);
             } else {
                 for (let i = 0; i < body.length; i++) {
                     let corp_id = body[i];
@@ -72,8 +72,8 @@ async function parse_corps(app, res, alli_id, url) {
                     await app.mysql.query('update ew_corporations set alliance_id = ? where corporation_id = ? and alliance_id != ?', [alli_id, corp_id, alli_id]);
                 }
                 await app.mysql.query('update ew_corporations set alliance_id = 0 where alliance_id = ? and corporation_id not in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
-                await app.mysql.query('update ew_characters set lastAffUpdated = 0 where alliance_id != ? and corporation_id in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
-                await app.mysql.query('update ew_characters set lastAffUpdated = 0 where alliance_id = ? and corporation_id not in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
+                await app.mysql.query('update ew_characters set lastAffUpdated = "1970-01-01 00:00:01" where alliance_id != ? and corporation_id in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
+                await app.mysql.query('update ew_characters set lastAffUpdated = "1970-01-01 00:00:01" where alliance_id = ? and corporation_id not in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
             }
         } else {
             console.log(res.statusCode + ' ' + url);
