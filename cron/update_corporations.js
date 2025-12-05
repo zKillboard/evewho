@@ -17,7 +17,7 @@ async function f(app) {
         let row = corps[i];
         let corp_id = row.corporation_id;
         await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', corp_id);
-        if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp-id); continue; }
+		if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp_id); continue; }
 
         let url = 'https://esi.evetech.net/v5/corporations/' + corp_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
