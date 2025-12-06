@@ -60,7 +60,7 @@ async function parse(app, res, map) {
 
             let history = await app.mysql.query('select start_date from ew_history where character_id = ? order by record_id desc limit 1', char_id);
             if (history.length > 0) {
-                const startDate = history[0].start_date || new Date();
+				const startDate = !(history[0].start_date instanceof Date) ? history[0].start_date : new Date();
                 await app.mysql.query('update ew_characters set lastEmploymentChange = ? where character_id = ?', [startDate, char_id]);
             }
 
