@@ -1,6 +1,6 @@
 module.exports = {
     exec: f,
-    span: 900
+    span: 7200
 }
 
 async function f(app) {
