@@ -8,10 +8,11 @@ exec: f,
 var m = false;
 var date = undefined;
 
-const affLong = 'select character_id, lastAffUpdated from ew_characters where lastAffUpdated <= date_sub(now(), interval 1 day) order by lastAffUpdated limit 10000';
-const affRecent = 'select character_id from ew_characters  where lastEmploymentChange >= date_sub(now(), interval 5 year) order by lastAffUpdated limit 10000';
- 
-const bucketLong = 'evewho:affiliates';
+//const affLonger = 'select character_id from ew_characters where lastEmploymentChange < date_sub(now(), interval 5 year) order by lastAffUpdated limit 10000';
+//const affRecent = 'select character_id from ew_characters where lastAffUpdate > date_sub(now(), interval 5 year) order by lastAffUpdated limit 10000';
+const affRecent = 'select character_id from ew_characters order by lastAffUpdated limit 10000';
+
+//const bucketLong = 'evewho:affiliates';
 const bucketRecent = 'evewho:affiliates:recent';
 
 async function f(app) {
@@ -19,7 +20,7 @@ async function f(app) {
         try {
             m = true;
 
-            if (await getCount(app, bucketLong) === 0) await populate(app, affLong, bucketLong);
+            //if (await getCount(app, bucketLong) === 0) await populate(app, affLonger, bucketLong);
             if (await getCount(app, bucketRecent) === 0) await populate(app, affRecent, bucketRecent);
         } finally {
             m = false;
