@@ -8,11 +8,10 @@ exec: f,
 var m = false;
 var date = undefined;
 
-//const affLonger = 'select character_id from ew_characters where lastEmploymentChange < date_sub(now(), interval 5 year) order by lastAffUpdated limit 10000';
-//const affRecent = 'select character_id from ew_characters where lastAffUpdate > date_sub(now(), interval 5 year) order by lastAffUpdated limit 10000';
-const affRecent = 'select character_id from ew_characters order by lastAffUpdated limit 10000';
+const affLonger = 'select character_id from ew_characters where lastEmploymentChange < date_sub(now(), interval 5 year);';
+const affRecent = 'select character_id from ew_characters where lastEmploymentChange >= date_sub(now(), interval 5 year)';
 
-//const bucketLong = 'evewho:affiliates';
+const bucketLong = 'evewho:affiliates';
 const bucketRecent = 'evewho:affiliates:recent';
 
 async function f(app) {
@@ -20,7 +19,7 @@ async function f(app) {
         try {
             m = true;
 
-            //if (await getCount(app, bucketLong) === 0) await populate(app, affLonger, bucketLong);
+            if (await getCount(app, bucketLong) === 0) await populate(app, affLonger, bucketLong);
             if (await getCount(app, bucketRecent) === 0) await populate(app, affRecent, bucketRecent);
         } finally {
             m = false;
@@ -33,13 +32,27 @@ async function getCount(app, bucket) {
 }
 
 async function populate(app, query, bucket) {
-    let chars = await app.mysql.query(query);
     const multi = app.redis.multi();
+    let count = 0;
     
-    for (let i = 0; i < chars.length; i++) {
-        var row = chars[i];
-        multi.sadd(bucket, row.character_id);
-    }
-    
-    await multi.exec();
+    return new Promise((resolve, reject) => {
+        const stream = app.mysql.connection.query(query).stream();
+        
+        stream.on('data', (row) => {
+            multi.sadd(bucket, row.character_id);
+            count++;
+        });
+        
+        stream.on('end', async () => {
+            await multi.exec();
+            console.log(`Populated ${count} into ${bucket}`);
+            resolve();
+        });
+        
+        stream.on('error', (err) => {
+            stream.destroy();
+            multi.discard();
+            reject(err);
+        });
+    });
 }
