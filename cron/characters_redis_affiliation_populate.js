@@ -33,9 +33,12 @@ async function getCount(app, bucket) {
 
 async function populate(app, query, bucket) {
     let chars = await app.mysql.query(query);
+    const multi = app.redis.multi();
+    
     for (let i = 0; i < chars.length; i++) {
         var row = chars[i];
-
-		await app.redis.sadd(bucket, row.character_id);
+        multi.sadd(bucket, row.character_id);
     }
+    
+    await multi.exec();
 }
