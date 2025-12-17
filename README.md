@@ -29,6 +29,11 @@ GET https://evewho.com/api/corplist/98330748
 
 # Alliance member list
 GET https://evewho.com/api/allilist/99006319
+
+# Corporation member change histories
+GET https://evewho.com/api/corpdeparted/98330748
+GET https://evewho.com/api/corpjoined/98330748
+
 ```
 
 ### Rate Limiting
