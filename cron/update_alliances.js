@@ -18,10 +18,10 @@ async function f(app) {
         let alli_id = row.alliance_id;
 
         await app.mysql.query('update ew_alliances set lastUpdated = now() where alliance_id = ?', alli_id);
-        let url = 'https://esi.evetech.net/v4/alliances/' + alli_id + '/';
+        let url = 'https://esi.evetech.net/alliances/' + alli_id + '/';
         promises.push(app.phin(url).then(res => { parse(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
-        let corpurl = 'https://esi.evetech.net/v1/alliances/' + alli_id + '/corporations/'
+        let corpurl = 'https://esi.evetech.net/alliances/' + alli_id + '/corporations/'
         promises.push(app.phin(corpurl).then(res => { parse_corps(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
 
     }

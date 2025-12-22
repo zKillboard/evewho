@@ -34,7 +34,7 @@ async function f(app) {
             if (app.pause420 == true) return;
             if (char_array.length == 0) return;
 
-            let url = 'https://esi.evetech.net/v1/characters/affiliation/'
+            let url = 'https://esi.evetech.net/characters/affiliation/'
             let data = JSON.stringify(char_array);
             let params = {url: url, method: 'post', data: data};
             promises.push(phin(params).then(res => { parse(app, res, map); }).catch(e => { console.log(e); }));
