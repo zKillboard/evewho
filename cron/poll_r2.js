@@ -19,6 +19,7 @@ async function f(app, depth = 0) {
 	try {
 		var res = await app.phin({ url: url, followRedirects: true, parse: 'text' });
 		var raw = res.body.toString();
+		var body = JSON.parse(raw);
 		if (body.sequence_id > 0) {
 			sequence = body.sequence_id + 1;
 		} else {
