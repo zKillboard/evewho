@@ -5,7 +5,13 @@ module.exports = {
 
 const entity = require('../classes/entity.js');
 
+/**
+ * 
+ * @param {*} app 
+ * @deprecated
+ */
 async function f(app) {
+	return;
 	let url = 'https://zkillredisq.stream/listen.php?queueID=' + process.env.redisqID;
 	try {
 		var res = await app.phin({ url: url, followRedirects: true, parse: 'text' });
