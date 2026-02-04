@@ -20,7 +20,6 @@ async function f(app) {
 	try {
 		do {
 			const url = `https://r2z2.zkillboard.com/ephemeral/${sequence}.json`;
-			console.log(url);
 			const res = await fetch(url, HEADERS);
 			status = res.status;
 			const body = await res.json();
