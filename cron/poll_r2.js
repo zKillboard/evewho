@@ -1,40 +1,43 @@
 module.exports = {
 	exec: f,
-	span: 1
+	span: 99
 }
 
 const entity = require('../classes/entity.js');
+const { HEADERS } = require('../classes/constants.js');
 
 let sequence = 0;
 
 async function f(app) {
 	if (sequence == 0) {
-		var res = await app.phin({ url: 'https://r2z2.zkillboard.com/ephemeral/sequence.json', followRedirects: true, parse: 'text' });
-		var raw = res.body.toString();
-		var body = JSON.parse(raw);
+		const res = await fetch('https://r2z2.zkillboard.com/ephemeral/sequence.json', HEADERS);
+
+		var body = await res.json();
 		sequence = body.sequence;
 	}
 
-	let url = 'https://r2z2.zkillboard.com/ephemeral/' + sequence + '.json';
+	let status;
 	try {
-		var res = await app.phin({ url: url, followRedirects: true, parse: 'text' });
-		var raw = res.body.toString();
-		var body = JSON.parse(raw);
-		if (body.sequence_id > 0) {
-			sequence = body.sequence_id + 1;
-		} else {
-			await app.sleep(15000);
-		}
-		if (body.esi) {
-			let killmail = body.esi;
-			await add_entities(app, killmail.victim);
-			for (let i = 0; i < killmail.attackers.length; i++) {
-				await add_entities(app, killmail.attackers[i]);
+		do {
+			const url = `https://r2z2.zkillboard.com/ephemeral/${sequence}.json`;
+			console.log(url);
+			const res = await fetch(url, HEADERS);
+			status = res.status;
+			const body = await res.json();
+
+			if (body.sequence_id > 0) {
+				sequence = body.sequence_id + 1;
 			}
-			// console.log('Processed zKill R2 killmail ID ' + killmail.killmail_id + ' at sequence ' + sequence);
-		}
+			if (body.esi) {
+				let killmail = body.esi;
+				await add_entities(app, killmail.victim);
+				for (let i = 0; i < killmail.attackers.length; i++) {
+					await add_entities(app, killmail.attackers[i]);
+				}
+				await app.sleep(100); // ensure we stay under rate limits
+			}
+		} while (status == 200);
 	} catch (e) {
-		await app.sleep(15000);
 		console.log(e); 
 	}
 }

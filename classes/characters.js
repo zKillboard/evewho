@@ -1,8 +1,11 @@
 
 let parse = async function(app, res, char_id, url) {
-    try {
-        if (res.statusCode == 200) {
-            var body = JSON.parse(res.body);
+	try {
+		if (res.status == 404) {
+			await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
+		}
+        else if (res.status == 200) {
+			var body = await res.json();
 
             await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
             let r = await app.mysql.query('update ew_characters set name = ?, sec_status = ? where character_id = ?', [body.name, body.security_status || 0, char_id]);
@@ -10,47 +13,49 @@ let parse = async function(app, res, char_id, url) {
                 await app.mysql.query('update ew_characters set history_added = 0 where character_id = ?', [char_id]);
                 await app.mysql.query('update ew_corporations set recalc = 1 where corporation_id = ?', [body.corporation_id || 0]);
                 await app.mysql.query('update ew_alliances set recalc = 1 where alliance_id = ?', [body.alliance_id || 0]);
-                console.log('Updating: ', char_id, body.name);
+                // console.log('Updating: ', char_id, body.name);
             }
             if (body.corporation_id > 100) await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [body.corporation_id || 0]);
             if (body.alliance_id > 10000) await app.mysql.query('insert ignore into ew_alliances (alliance_id) values (?)', [body.alliance_id || 0]);
         } else {
             app.error_count++;
             setTimeout(function() { app.error_count--; }, 1000);
-            if (res.statusCode == 404) {
+			if (res.status == 404) {
                 var body = JSON.parse(res.body);
                 if (body.error == 'Character has been deleted!') {
                     let r = await app.mysql.query('update ew_characters set history_added = 1, lastUpdated = now(), recent_change = 0, faction_id = 0, alliance_id = 0, corporation_id = 1000001 where character_id = ?', [char_id]);
                     return await app.sleep(10000);
                 }
             }
-            if (res.statusCode == 404) {
+			if (res.status == 404) {
                 // Get the name, if we have a name then this is a false 404, otherwise remove it
                 let name = await app.mysql.queryField('name', 'select name from ew_characters where character_id = ?', [char_id]);
                 if (name !== null && name !== undefined && name.length > 0) return;
                 console.log('Received valid 404 for ' + char_id);
                 await app.mysql.query('delete from ew_characters where character_id = ?', [char_id]);
             }
-            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
+			if (res.status != 502) console.log(res.status + ' ' + url);
 
-            if (res.statusCode == 420) {
+			if (res.status == 420) {
                 app.pause420 = true;
                 await app.sleep(120000);
                 app.pause420 = false;
             }
         }
     } catch (e) { 
-        console.log(url + ' ' + e);
+		console.error(url, res.status, e);
     }
 }
 
 let corps_set = new Set();
 setInterval(() => corps_set.clear(), 9600);
 let parse_corps = async function(app, res, char_id, url) {
-    try {
-        if (res.statusCode == 200) {
-            var body = JSON.parse(res.body).reverse();
-            let corp_number = 1;
+	try {
+        if (res.status == 200) {
+			var raw = await res.text();
+			var body = JSON.parse(raw);
+
+			let corp_number = 1;
             await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
                 let row = body[i];
@@ -67,17 +72,17 @@ let parse_corps = async function(app, res, char_id, url) {
             }
             await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
         } else {
-            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
+			if (res.status != 502) console.log(res.status + ' ' + url);
         }
     } catch (e) {
             app.error_count++;
             setTimeout(function() { app.error_count--; }, 1000);
-        console.log(url + ' ' + e);
+			console.error(url, res.status, e);
     }
 }
 
 let failed = async function(e, char_id) {
-    console.log(e);
+    console.error(e);
 }
 
 

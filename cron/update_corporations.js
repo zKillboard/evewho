@@ -3,6 +3,7 @@ module.exports = {
     span: 1
 }
 
+const { HEADERS } = require('../classes/constants.js');
 const entity = require('../classes/entity.js');
 
 async function f(app) {
@@ -20,7 +21,14 @@ async function f(app) {
 		if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp_id); continue; }
 
 		let url = 'https://esi.evetech.net/corporations/' + corp_id;
-        promises.push(app.phin(url).then(res => { parse(app, res, corp_id, url); }).catch(e => { failed(e, corp_id); }));
+				const res = await fetch(url, {
+					headers: {
+						...HEADERS.headers,
+						'X-Compatibility-Date': '2099-01-01'
+					}
+				});
+		
+		await parse(app, res, corp_id, url);
 
         await app.sleep(1000);
     }
@@ -30,8 +38,8 @@ async function f(app) {
 
 async function parse(app, res, corp_id, url) {
     try {
-        if (res.statusCode == 200) {
-            var body = JSON.parse(res.body);
+        if (res.status == 200) {
+            var body = await res.json();
 
             let r = await app.mysql.query('update ew_corporations set alliance_id = ?, faction_id = ?, ceoID = ?, memberCount = ?, name = ?, ticker = ?, taxRate = ? where corporation_id = ?', [body.alliance_id || 0, body.faction_id || 0, body.ceo_id || 0, body.memberCount || 0, body.name, body.ticker, body.tax_rate || 0, corp_id]);
             await app.mysql.query('update ew_corporations set recalc = ?, lastUpdated = now() where corporation_id = ?', [(r.changedRows > 0 ? 1 : 0), corp_id]);
@@ -41,10 +49,10 @@ async function parse(app, res, corp_id, url) {
             await entity.add(app, 'char', body.ceo_id);
         } else {
             app.error_count++;
-            if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
+			if (res.status != 502) console.log(res.status + ' ' + url);
             setTimeout(function() { app.error_count--; }, 1000);
 
-            if (res.statusCode == 420) {
+			if (res.status == 420) {
                 app.pause420 = true;
                 await app.sleep(120000);
                 app.pause420 = false;

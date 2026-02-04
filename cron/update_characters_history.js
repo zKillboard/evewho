@@ -4,7 +4,7 @@ module.exports = {
 }
 
 const characters = require('../classes/characters.js');
-
+const { HEADERS } = require('../classes/constants.js');
 const todaysDayOfMonth = new Date().getDate();
 
 async function f(app) {
@@ -18,11 +18,9 @@ async function f(app) {
         let row = chars[i];
         let char_id = row.character_id;
 
-        let corpurl = 'https://esi.evetech.net/characters/' + char_id + '/corporationhistory';
-        promises.push(app.phin(corpurl).then(res => { characters.parse_corps(app, res, char_id, corpurl); }).catch(e => { characters.failed(e, char_id); }));
-
-        //let sleep = 500 + (app.error_count * 1000);
-        //await app.sleep(sleep);
+		let corpurl = 'https://esi.evetech.net/characters/' + char_id + '/corporationhistory';
+		const res = await fetch(corpurl, HEADERS);
+		promises.push(characters.parse_corps(app, res, char_id, corpurl));
     }
     await Promise.all(promises).catch();
 }

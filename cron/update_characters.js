@@ -4,15 +4,12 @@ module.exports = {
 }
 
 const characters = require('../classes/characters.js');
-
-const todaysDayOfMonth = new Date().getDate();
+const { HEADERS } = require('../classes/constants.js');
 
 const set = new Set();
 
 async function f(app) {
-    let promises = [];
-
-    let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated <= "1970-01-01 00:00:01" and recent_change = 0 and corporation_id != 1000001 order by lastUpdated limit 10');
+	let chars = await app.mysql.query('select character_id, name from ew_characters where lastUpdated <= "1981-01-01 00:00:01" and recent_change = 0 and corporation_id != 1000001 order by lastUpdated limit 10');
     for (let i = 0; i < chars.length; i++ ) {
         if (app.pause420 == true) break;
 
@@ -34,8 +31,14 @@ async function next(app, char_id) {
     try {
         set.add(char_id);
 
-        let url = 'https://esi.evetech.net/characters/' + char_id;
-        await app.phin(url).then(res => { characters.parse(app, res, char_id, url); }).catch(e => { characters.failed(e, char_id); });
+		let url = 'https://esi.evetech.net/characters/' + char_id;
+		const res = await fetch(url, {
+			headers: {
+				...HEADERS.headers,
+				'X-Compatibility-Date': '2099-01-01'
+			}
+		});
+		await characters.parse(app, res, char_id, url);
     } finally {
         set.delete(char_id);
     }

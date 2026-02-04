@@ -3,6 +3,8 @@ module.exports = {
 	span: 1
 }
 
+const { HEADERS } = require('../classes/constants.js');
+
 const sql = `
 (SELECT character_id FROM ew_characters 
   WHERE lastEmploymentChange >= DATE_SUB(NOW(), INTERVAL 5 YEAR) 
@@ -28,9 +30,16 @@ async function update_names(app, characterIDs) {
 	try {
         let url = 'https://esi.evetech.net/universe/names';
         let data = JSON.stringify(characterIDs);
-        let params = {url: url, method: 'post', data: data};
-        let names = await app.phin(params);
-        let namesJson = JSON.parse(names.body);
+		
+        const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				...HEADERS.headers,
+				'Content-Type': 'application/json'
+			},
+			body: data
+		});
+        let namesJson = await res.json();
 	
         let changeCount = 0;
 		let updatePromises = namesJson.map(async (entry) => {

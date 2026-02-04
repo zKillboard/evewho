@@ -19,6 +19,6 @@ async function add(app, type, id) {
     }
 
     let ret = await app.mysql.query(query, [id]);
-    if (ret.affectedRows > 0) console.log('Added type ' + type + ': ' + id);
+    // if (ret.affectedRows > 0) console.log('Added type ' + type + ': ' + id);
     return ret;
 }

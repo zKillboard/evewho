@@ -3,6 +3,7 @@ module.exports = {
     span: 15
 }
 
+const { HEADERS } = require('../classes/constants.js');
 const entity = require('../classes/entity.js');
 
 async function f(app) {
@@ -19,11 +20,17 @@ async function f(app) {
 
         await app.mysql.query('update ew_alliances set lastUpdated = now() where alliance_id = ?', alli_id);
 		let url = 'https://esi.evetech.net/alliances/' + alli_id;
-        promises.push(app.phin(url).then(res => { parse(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
+		const res = await fetch(url, {
+			headers: {
+				...HEADERS.headers,
+				'X-Compatibility-Date': '2099-01-01'
+			}
+		});
+		await parse(app, res, alli_id, url);
 
-        let corpurl = 'https://esi.evetech.net/alliances/' + alli_id + '/corporations'
-        promises.push(app.phin(corpurl).then(res => { parse_corps(app, res, alli_id, url); }).catch(e => { failed(e, alli_id); }));
-
+		let corpurl = 'https://esi.evetech.net/alliances/' + alli_id + '/corporations'
+		const res2 = await fetch(corpurl, HEADERS);
+		await parse_corps(app, res2, alli_id, corpurl);
     }
 
     await Promise.all(promises).catch();
@@ -31,8 +38,8 @@ async function f(app) {
 
 async function parse(app, res, alli_id, url) {
   try {
-    if (res.statusCode == 200) {
-        var body = JSON.parse(res.body);
+	  if (res.status == 200) {
+        var body = await res.json();
 
         let r = await app.mysql.query('update ew_alliances set faction_id = ?, name = ?, ticker = ?, executor_corp = ? where alliance_id = ?', [body.faction_id || 0, body.name, body.ticker, body.executor_corporation_id || 0, alli_id]);
         if (r.changedRows > 0) {
@@ -44,10 +51,10 @@ async function parse(app, res, alli_id, url) {
         await entity.add(app, 'char', body.creator_id);
     } else {
         app.error_count++;
-        if (res.statusCode != 502) console.log(res.statusCode + ' ' + url);
+		  if (res.status != 502) console.log(res.status + ' ' + url);
         setTimeout(function() { app.error_count--; }, 1000);
 
-        if (res.statusCode == 420) {
+		  if (res.status == 420) {
             app.pause420 = true;
             await app.sleep(120000);
             app.pause420 = true;
@@ -60,8 +67,8 @@ async function parse(app, res, alli_id, url) {
 
 async function parse_corps(app, res, alli_id, url) {
     try {
-        if (res.statusCode == 200) {
-            var body = JSON.parse(res.body);
+        if (res.status == 200) {
+            var body = await res.json();
             if (body.length == 0) {
                 await app.mysql.query('update ew_corporations set alliance_id = 0 where alliance_id = ?', [alli_id]);
                 await app.mysql.query('update ew_characters set lastAffUpdated = "1970-01-01 00:00:01" where alliance_id = ?', [alli_id]);
@@ -76,7 +83,7 @@ async function parse_corps(app, res, alli_id, url) {
                 await app.mysql.query('update ew_characters set lastAffUpdated = "1970-01-01 00:00:01" where alliance_id = ? and corporation_id not in (' + body.map((i) => parseInt(i)).join (',') + ')', alli_id);
             }
         } else {
-            console.log(res.statusCode + ' ' + url);
+			console.log(res.status + ' ' + url);
         }
     } catch (e) {
         console.log(url + ' ' + e);
