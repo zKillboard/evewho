@@ -10,6 +10,6 @@ async function f(app) {
 
         let row = await app.mysql.queryRow('select count(*) count, avg(sec_status) avg_sec_status, count(distinct corporation_id) corp_count from ew_characters where alliance_id = ?', [alli.alliance_id]);
 
-        await app.mysql.query('update ew_alliances set corp_count = ?, memberCount = ?, avg_sec_status = ?, diff = -1 * (mc_7 - ?), recalc = 0 where alliance_id = ?', [row.corp_count, row.count, row.avg_sec_status, row.count, alli.alliance_id]);
+        await app.mysql.query('update ew_alliances set corp_count = ?, memberCount = ?, avg_sec_status = ?, diff = -1 * (mc_7 - ?), recalc = 0 where alliance_id = ?', [row.corp_count, row.count, row.avg_sec_status || 0, row.count, alli.alliance_id]);
     }
 }
