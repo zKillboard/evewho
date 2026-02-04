@@ -7,7 +7,7 @@ const entity = require('../classes/entity.js');
 
 let sequence = 0;
 
-async function f(app, depth = 0) {
+async function f(app) {
 	if (sequence == 0) {
 		var res = await app.phin({ url: 'https://r2z2.zkillboard.com/ephemeral/sequence.json', followRedirects: true, parse: 'text' });
 		var raw = res.body.toString();
@@ -31,7 +31,7 @@ async function f(app, depth = 0) {
 			for (let i = 0; i < killmail.attackers.length; i++) {
 				await add_entities(app, killmail.attackers[i]);
 			}
-			console.log('Processed zKill R2 killmail ID ' + killmail.killmail_id + ' at sequence ' + sequence);
+			// console.log('Processed zKill R2 killmail ID ' + killmail.killmail_id + ' at sequence ' + sequence);
 		}
 	} catch (e) {
 		await app.sleep(10000);
