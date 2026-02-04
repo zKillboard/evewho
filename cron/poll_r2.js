@@ -23,7 +23,7 @@ async function f(app) {
 		if (body.sequence_id > 0) {
 			sequence = body.sequence_id + 1;
 		} else {
-			await app.sleep(10000);
+			await app.sleep(15000);
 		}
 		if (body.esi) {
 			let killmail = body.esi;
@@ -34,7 +34,7 @@ async function f(app) {
 			// console.log('Processed zKill R2 killmail ID ' + killmail.killmail_id + ' at sequence ' + sequence);
 		}
 	} catch (e) {
-		await app.sleep(10000);
+		await app.sleep(15000);
 		console.log(e); 
 	}
 }
