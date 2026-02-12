@@ -20,12 +20,7 @@ async function f(app) {
         }
 		
 		let url = 'https://esi.evetech.net/characters/' + chars[i].character_id;
-		const res = await fetch(url, {
-			headers: {
-				...HEADERS.headers,
-				'X-Compatibility-Date': '2099-01-01'
-			}
-		});
+		const res = await fetch(url, HEADERS);
 
 		awaits.push(characters.parse(app, res, chars[i].character_id, url));		
 	}

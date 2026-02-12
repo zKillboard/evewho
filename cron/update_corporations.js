@@ -21,12 +21,7 @@ async function f(app) {
 		if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp_id); continue; }
 
 		let url = 'https://esi.evetech.net/corporations/' + corp_id;
-				const res = await fetch(url, {
-					headers: {
-						...HEADERS.headers,
-						'X-Compatibility-Date': '2099-01-01'
-					}
-				});
+		const res = await fetch(url, HEADERS);
 		
 		await parse(app, res, corp_id, url);
 

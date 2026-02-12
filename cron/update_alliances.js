@@ -20,12 +20,7 @@ async function f(app) {
 
         await app.mysql.query('update ew_alliances set lastUpdated = now() where alliance_id = ?', alli_id);
 		let url = 'https://esi.evetech.net/alliances/' + alli_id;
-		const res = await fetch(url, {
-			headers: {
-				...HEADERS.headers,
-				'X-Compatibility-Date': '2099-01-01'
-			}
-		});
+		const res = await fetch(url, HEADERS);
 		await parse(app, res, alli_id, url);
 
 		let corpurl = 'https://esi.evetech.net/alliances/' + alli_id + '/corporations'

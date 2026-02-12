@@ -32,12 +32,7 @@ async function next(app, char_id) {
         set.add(char_id);
 
 		let url = 'https://esi.evetech.net/characters/' + char_id;
-		const res = await fetch(url, {
-			headers: {
-				...HEADERS.headers,
-				'X-Compatibility-Date': '2099-01-01'
-			}
-		});
+		const res = await fetch(url, HEADERS);
 		await characters.parse(app, res, char_id, url);
     } finally {
         set.delete(char_id);
