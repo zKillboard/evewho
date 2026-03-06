@@ -13,7 +13,7 @@ async function getData(req, res) {
 	let query, left = false, right = false;
 	switch (req.params.which) {
 		case 'current':
-			query = 'select h.character_id id, c.name, date_format(start_date, "%Y/%m/%d %H:%i") start_date from ew_history h left join ew_characters c on h.character_id = c.character_id where end_date is null and h.corporation_id = ? order by start_date desc limit 250 offset ?';
+			query = 'select c.character_id id, c.name, date_format(h.start_date, "%Y/%m/%d %H:%i") start_date from ew_characters c left join ew_history h on h.record_id = (select max(h2.record_id) from ew_history h2 where h2.character_id = c.character_id and h2.corporation_id = c.corporation_id) where c.corporation_id = ? order by h.start_date desc limit 250 offset ?';
 			right = true;
 			break;
 		case 'joined':
