@@ -55,21 +55,18 @@ let parse_corps = async function(app, res, char_id, url) {
 			var raw = await res.text();
 			var body = JSON.parse(raw);
 
-			let corp_number = 1;
             await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
                 let row = body[i];
-                let nextrow = (i < (body.length - 1) ? body[i + 1] : {});
                 if (!corps_set.has(row.corporation_id)) {
                     await app.mysql.query('insert ignore into ew_corporations (corporation_id) values (?)', [row.corporation_id]);
                     corps_set.add(row.corporation_id);
                 }
                 // Convert ISO 8601 datetime to MySQL datetime format
                 const startDate = row.start_date ? row.start_date.replace('T', ' ').replace('Z', '') : null;
-                const endDate = nextrow.start_date ? nextrow.start_date.replace('T', ' ').replace('Z', '') : null;
-                await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date, end_date, corp_number) values (?, ?, ?, ?, date_sub(?, interval 1 minute), ?)', [row.record_id, char_id, row.corporation_id, startDate, endDate, corp_number]);
-                corp_number++;
-            }
+                await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date) values (?, ?, ?, ?)', [row.record_id, char_id, row.corporation_id, startDate]);
+			}
+			await app.mysql.query('update ew_history h1 left join ew_history h2 on h2.record_id = (select min(h3.record_id) from ew_history h3 where h3.character_id = h1.character_id and h3.record_id > h1.record_id) set h1.end_date = h2.start_date where h1.character_id = ? and not (h1.end_date <=> h2.start_date)', [char_id]);
             await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
         } else {
 			if (res.status != 502) console.log(res.status + ' ' + url);
@@ -82,7 +79,7 @@ let parse_corps = async function(app, res, char_id, url) {
 }
 
 let failed = async function(e, char_id) {
-    console.error(e);
+    console.error(char_id, e);
 }
 
 
