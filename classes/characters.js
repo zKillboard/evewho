@@ -49,7 +49,8 @@ let parse = async function(app, res, char_id, url) {
 
 let corps_set = new Set();
 setInterval(() => corps_set.clear(), 9600);
-let parse_corps = async function(app, res, char_id, url) {
+let parse_corps = async function (app, res, row, url) {
+	let char_id = row.character_id;
 	try {
         if (res.status == 200) {
 			var raw = await res.text();
@@ -67,6 +68,9 @@ let parse_corps = async function(app, res, char_id, url) {
                 await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date) values (?, ?, ?, ?)', [row.record_id, char_id, row.corporation_id, startDate]);
 			}
 			await app.mysql.query('with x as (select record_id, lead(start_date) over (partition by character_id order by record_id) next_start_date from ew_history where character_id = ?) update ew_history h join x on x.record_id = h.record_id set h.end_date = x.next_start_date where h.character_id = ? and not (h.end_date <=> x.next_start_date);', [char_id, char_id]);
+			if (row.corporation_id == 1000001) {
+				await app.mysql.query('update ew_history set end_date = start_date where end_date is null and character_id = ?', [char_id]);
+			}
             await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
         } else {
 			if (res.status != 502) console.log(res.status + ' ' + url);
