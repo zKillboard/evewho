@@ -56,7 +56,7 @@ let parse_corps = async function (app, res, row, url) {
 			var raw = await res.text();
 			var body = JSON.parse(raw);
 
-            await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
+            //await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
                 let row = body[i];
                 if (!corps_set.has(row.corporation_id)) {
