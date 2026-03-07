@@ -174,15 +174,13 @@ CREATE TABLE `ew_history` (
   `record_id` int NOT NULL,
   `character_id` int NOT NULL,
   `corporation_id` int NOT NULL,
-  `corp_number` int NOT NULL,
   `start_date` timestamp NULL DEFAULT NULL,
   `end_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`record_id`),
   KEY `corporation_id` (`corporation_id`),
   KEY `character_id` (`character_id`),
   KEY `start_date` (`start_date`),
-  KEY `end_date` (`end_date`),
-  KEY `corp_number` (`corp_number`)
+  KEY `end_date` (`end_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

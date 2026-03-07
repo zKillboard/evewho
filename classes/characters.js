@@ -66,7 +66,7 @@ let parse_corps = async function(app, res, char_id, url) {
                 const startDate = row.start_date ? row.start_date.replace('T', ' ').replace('Z', '') : null;
                 await app.mysql.query('replace into ew_history (record_id, character_id, corporation_id, start_date) values (?, ?, ?, ?)', [row.record_id, char_id, row.corporation_id, startDate]);
 			}
-			await app.mysql.query('update ew_history h1 left join ew_history h2 on h2.record_id = (select min(h3.record_id) from ew_history h3 where h3.character_id = h1.character_id and h3.record_id > h1.record_id) set h1.end_date = h2.start_date where h1.character_id = ? and not (h1.end_date <=> h2.start_date)', [char_id]);
+			await app.mysql.query('with x as (select record_id, lead(start_date) over (partition by character_id order by record_id) next_start_date from ew_history where character_id = ?) update ew_history h join x on x.record_id = h.record_id set h.end_date = x.next_start_date where h.character_id = ? and not (h.end_date <=> x.next_start_date);', [char_id, char_id]);
             await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
         } else {
 			if (res.status != 502) console.log(res.status + ' ' + url);
