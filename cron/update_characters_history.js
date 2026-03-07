@@ -17,7 +17,7 @@ async function f(app) {
 
         let row = chars[i];
 
-		let corpurl = 'https://esi.evetech.net/characters/' + char_id + '/corporationhistory';
+		let corpurl = 'https://esi.evetech.net/characters/' + row.character_id + '/corporationhistory';
 		const res = await fetch(corpurl, HEADERS);
 		promises.push(characters.parse_corps(app, res, row, corpurl));
     }
