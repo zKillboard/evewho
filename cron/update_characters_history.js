@@ -8,6 +8,8 @@ const { HEADERS } = require('../classes/constants.js');
 const todaysDayOfMonth = new Date().getDate();
 
 async function f(app) {
+	if (app.util.isDowntime()) return;
+
     let promises = [];
 
 	let chars = await app.mysql.query('select character_id, name, corporation_id from ew_characters where name != "" and history_added = 0 order by lastEmploymentChange desc limit 3');
