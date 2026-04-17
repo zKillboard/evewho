@@ -52,7 +52,7 @@ async function parse(app, res, alli_id, url) {
 		  if (res.status == 420) {
             app.pause420 = true;
             await app.sleep(120000);
-            app.pause420 = true;
+            app.pause420 = false;
         }
     }
   } catch (e) { 
