@@ -20,7 +20,10 @@ async function doStuff(req, res, next, controllerFile, pugFile) {
     }
 
   } catch (e) {
-    console.log(e);
+    console.error('[' + new Date().toISOString() + '] Error in ' + controllerFile + ':', e);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }
 
