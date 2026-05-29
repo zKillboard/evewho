@@ -55,6 +55,7 @@ let parse_corps = async function (app, res, row, url) {
         if (res.status == 200) {
 			var raw = await res.text();
 			var body = JSON.parse(raw);
+			console.log(raw);
 
             //await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
