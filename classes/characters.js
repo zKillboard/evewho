@@ -55,7 +55,6 @@ let parse_corps = async function (app, res, row, url) {
         if (res.status == 200) {
 			var raw = await res.text();
 			var body = JSON.parse(raw);
-			console.log(raw);
 
             //await app.mysql.query('delete from ew_history where character_id = ?', [char_id]);
             for (let i = 0; i < body.length; i++) {
@@ -72,7 +71,8 @@ let parse_corps = async function (app, res, row, url) {
 			if (row.corporation_id == 1000001) {
 				await app.mysql.query('update ew_history set end_date = start_date where end_date is null and character_id = ?', [char_id]);
 			}
-            await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
+			await app.mysql.query('update ew_characters set history_added = 1 where character_id = ?', [char_id]);
+			console.log('Updated history for ' + row.name);
         } else {
 			if (res.status != 502) console.log(res.status + ' ' + url);
         }
