@@ -20,12 +20,10 @@ async function f(app) {
 
 			let row = chars[i];
 
-			console.log('Updating history for ' + row.name);
 			let corpurl = 'https://esi.evetech.net/characters/' + row.character_id + '/corporationhistory';
 			const res = await fetch(corpurl, HEADERS);
-			promises.push(characters.parse_corps(app, res, row, corpurl));
+			characters.parse_corps(app, res, row, corpurl).catch(e => console.log(e));
 		}
-		await Promise.all(promises).catch();
 	} catch (e) {
 		console.log(e);
 	}
