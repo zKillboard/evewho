@@ -7,8 +7,6 @@ const { HEADERS } = require('../classes/constants.js');
 const entity = require('../classes/entity.js');
 
 async function f(app) {
-    let promises = [];
-
     let corps = await app.mysql.query('select corporation_id from ew_corporations order by lastUpdated limit 5');
     for (let i = 0; i < corps.length; i++ ){
         if (app.bailout == true || app.pause420 == true) break;
@@ -27,8 +25,6 @@ async function f(app) {
 
         await app.sleep(1000);
     }
-
-    await Promise.all(promises).catch();
 }
 
 async function parse(app, res, corp_id, url) {
