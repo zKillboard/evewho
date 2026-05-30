@@ -21,7 +21,8 @@ async function f(app) {
 			for (let i = max_char_id + 1; i <= next_id; i++) {
                 await entity.add(app, 'char', i);
             }
-            max_char_id = next_id;
+			max_char_id = next_id;
+			console.log(`Added ${delta} new characters, max char id is now ${max_char_id}`);
         }
     } catch (e) {
         console.log(e);
