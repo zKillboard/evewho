@@ -37,6 +37,12 @@ mixin history(title, type, contents, joined, left, list_id, list_scope)
                 +image(type, val.id, 64, val.name)
               td.name
                 a(href='/' + type + '/' + val.id)= val.name
+                if val.alliances && val.alliances.length > 0
+                  each alliance in val.alliances
+                    br
+                    +image('alliance', alliance.id, 24, alliance.name)
+                    |  
+                    a.small(href='/alliance/' + alliance.id)= alliance.name
               td
                 if left
                   span.dates.align-right.departed= val.end_date
