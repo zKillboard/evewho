@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    div.row.justify-content-center
+        div.col-lg-8
+            div.card
+                div.card-body
+                    h1.h3.mb-4 Site Stats
+                    table.table.table-striped.table-sm.mb-0
+                        thead
+                            tr
+                                th(scope='col') Entity
+                                th.text-right(scope='col') Total
+                        tbody
+                            tr
+                                td Alliances
+                                td.text-right= alliance_count.toLocaleString()
+                            tr
+                                td Corporations
+                                td.text-right= corporation_count.toLocaleString()
+                            tr
+                                td Characters
+                                td.text-right= character_count.toLocaleString()
