@@ -6,5 +6,23 @@ block content
     div.row
         div.col-sm
           +details(details, 'corporation', details.corporation_id)
+          if alliance_history && alliance_history.length > 0
+            h4.mt-3 Alliance History
+            table.table.table-striped.table-bordered.table-sm.table-hover.delta-table
+              thead.thead-light
+                tr
+                  th Alliance
+                  th Started
+                  th Ended
+              tbody
+                each row in alliance_history
+                  tr
+                    td
+                      if row.alliance_name
+                        a(href='/alliance/' + row.alliance_id)= row.alliance_name
+                      else
+                        | Alliance #{row.alliance_id}
+                    td= row.start_date
+                    td= row.end_date || ''
         div.col-sm
           +history('Characters', 'character', characters, true, false, details.corporation_id)

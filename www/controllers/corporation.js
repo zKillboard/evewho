@@ -26,6 +26,18 @@ async function getData(req, res) {
 		o.characters = []; //await app.mysql.query('select distinct ew.character_id id, name, date_format(start_date, "%Y/%m/%d %H:%i") start_date from ew_characters ew left join ew_history eh on ew.character_id = eh.character_id where ew.corporation_id = ? and eh.corporation_id = ? and end_date is null order by start_date desc limit 500', [req.params.id, req.params.id]);
 	}
 
+	o.alliance_history = await app.mysql.query(
+		`select h.record_id, h.alliance_id, h.is_deleted,
+		date_format(h.start_date, "%Y/%m/%d %H:%i") start_date,
+		date_format(h.end_date, "%Y/%m/%d %H:%i") end_date,
+		a.name alliance_name
+		from ew_corporation_alliance_history h
+		left join ew_alliances a on a.alliance_id = h.alliance_id
+		where h.corporation_id = ? and h.alliance_id != 0
+		order by h.record_id desc`,
+		[req.params.id]
+	);
+
 	if (o.details.memberCount > 0 && o.details.ceoID > 1) {
 		const ceo = await app.mysql.query('select character_id, name from ew_characters where character_id = ?', o.details.ceoID);
 		if (ceo.length) o.details.ceo_name = ceo[0].name;

@@ -38,6 +38,8 @@ async function parse(app, res, corp_id, url) {
             await entity.add(app, 'alli', body.alliance_id);
             await entity.add(app, 'char', body.creator_id);
             await entity.add(app, 'char', body.ceo_id);
+
+            await syncAllianceHistory(app, corp_id);
         } else {
             app.error_count++;
 			if (res.status != 502) console.log(res.status + ' ' + url);
@@ -51,6 +53,41 @@ async function parse(app, res, corp_id, url) {
         }
     } catch (e) { 
         console.log(url + ' ' + e);
+    }
+}
+
+async function syncAllianceHistory(app, corp_id) {
+    const url = 'https://esi.evetech.net/corporations/' + corp_id + '/alliancehistory';
+    const res = await fetch(url, HEADERS);
+
+    try {
+        if (res.status == 200) {
+            const body = await res.json();
+            for (let i = 0; i < body.length; i++) {
+                const row = body[i];
+                const startDate = row.start_date ? row.start_date.replace('T', ' ').replace('Z', '') : null;
+                await app.mysql.query(
+                    'replace into ew_corporation_alliance_history (corporation_id, record_id, alliance_id, is_deleted, start_date) values (?, ?, ?, ?, ?)',
+                    [corp_id, row.record_id, row.alliance_id || 0, row.is_deleted ? 1 : 0, startDate]
+                );
+            }
+
+            await app.mysql.query(
+                'with x as (select record_id, lead(start_date) over (partition by corporation_id order by record_id) next_start_date from ew_corporation_alliance_history where corporation_id = ?) update ew_corporation_alliance_history h join x on x.record_id = h.record_id set h.end_date = x.next_start_date where h.corporation_id = ? and not (h.end_date <=> x.next_start_date);',
+                [corp_id, corp_id]
+            );
+        } else {
+            if (res.status != 502) console.log(res.status + ' ' + url);
+            if (res.status == 420) {
+                app.pause420 = true;
+                await app.sleep(120000);
+                app.pause420 = false;
+            }
+        }
+    } catch (e) {
+        app.error_count++;
+        setTimeout(function() { app.error_count--; }, 1000);
+        console.error(url, res.status, e);
     }
 }
 

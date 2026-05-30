@@ -150,6 +150,27 @@ CREATE TABLE `ew_corporations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `ew_corporation_alliance_history`
+--
+
+DROP TABLE IF EXISTS `ew_corporation_alliance_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ew_corporation_alliance_history` (
+  `corporation_id` int NOT NULL,
+  `record_id` int NOT NULL,
+  `alliance_id` int NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `start_date` timestamp NULL DEFAULT NULL,
+  `end_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`corporation_id`,`record_id`),
+  KEY `alliance_id` (`alliance_id`),
+  KEY `start_date` (`start_date`),
+  KEY `end_date` (`end_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `ew_factions`
 --
 

@@ -76,6 +76,13 @@ html { overflow-y: scroll; }
   text-align: center;
 }
 
+/* Keep hover text readable across all table-hover tables. */
+.table-hover tbody tr:hover,
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+  color: inherit;
+}
+
 /* Real dark mode, no color inversion */
 body.dark {
   background: #000;
@@ -163,6 +170,7 @@ body.dark .table-striped tbody tr:nth-of-type(odd) {
 
 body.dark .table-hover tbody tr:hover {
   background-color: #222;
+  color: #ddd;
 }
 
 body.dark .table td,
