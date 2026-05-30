@@ -1,23 +1,115 @@
 extends layout
 
 block content
+    - const fmt = (value, digits = 0) => Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })
     div.row.justify-content-center
-        div.col-lg-8
-            div.card
-                div.card-body
-                    h1.h3.mb-4 Site Stats
-                    table.table.table-striped.table-sm.mb-0
-                        thead
-                            tr
-                                th(scope='col') Entity
-                                th.text-right(scope='col') Total
-                        tbody
-                            tr
-                                td Alliances
-                                td.text-right= alliance_count.toLocaleString()
-                            tr
-                                td Corporations
-                                td.text-right= corporation_count.toLocaleString()
-                            tr
-                                td Characters
-                                td.text-right= character_count.toLocaleString()
+        div.col-lg-10
+            div.d-flex.justify-content-between.align-items-start.flex-wrap.mb-3
+                div
+                    h1.h3.mb-1 Site Stats
+                    if generated_at
+                        p.text-muted.mb-0 Cached #{new Date(generated_at).toUTCString()} and refreshed every #{refresh_interval_hours} hours.
+                    else
+                        p.text-muted.mb-0 Cache not populated yet. This page will fill in after the stats cron runs.
+            div.row
+                div.col-md-4.mb-3
+                    div.card.h-100
+                        div.card-body
+                            h2.h5 Totals
+                            table.table.table-sm.mb-0
+                                tbody
+                                    tr
+                                        td Alliances
+                                        td.text-right= fmt(alliance_count)
+                                    tr
+                                        td Corporations
+                                        td.text-right= fmt(corporation_count)
+                                    tr
+                                        td Characters
+                                        td.text-right= fmt(character_count)
+                div.col-md-4.mb-3
+                    div.card.h-100
+                        div.card-body
+                            h2.h5 Largest Groups
+                            table.table.table-sm.mb-0
+                                tbody
+                                    tr
+                                        td Largest corporation
+                                        td.text-right
+                                            div= largest_corporation_name
+                                            small.text-muted= fmt(largest_corporation_members) + ' members'
+                                    tr
+                                        td Largest alliance
+                                        td.text-right
+                                            div= largest_alliance_name
+                                            small.text-muted= fmt(largest_alliance_members) + ' members'
+                div.col-md-4.mb-3
+                    div.card.h-100
+                        div.card-body
+                            h2.h5 Averages
+                            table.table.table-sm.mb-0
+                                tbody
+                                    tr
+                                        td Avg player corp size
+                                        td.text-right= fmt(avg_player_corporation_members, 1)
+                                    tr
+                                        td Avg alliance size
+                                        td.text-right= fmt(avg_alliance_members, 1)
+            div.row
+                div.col-md-6.mb-3
+                    div.card.h-100
+                        div.card-body
+                            h2.h5 Corporations
+                            table.table.table-striped.table-sm.mb-0
+                                tbody
+                                    tr
+                                        td Player corporations
+                                        td.text-right= fmt(player_corporation_count)
+                                    tr
+                                        td NPC corporations
+                                        td.text-right= fmt(npc_corporation_count)
+                                    tr
+                                        td Allied player corporations
+                                        td.text-right= fmt(allied_corporation_count)
+                                    tr
+                                        td Independent player corporations
+                                        td.text-right= fmt(independent_corporation_count)
+                                    tr
+                                        td Active player corporations
+                                        td.text-right= fmt(active_corporation_count)
+                                    tr
+                                        td Inactive player corporations
+                                        td.text-right= fmt(inactive_corporation_count)
+                                    tr
+                                        td Player corporations with members
+                                        td.text-right= fmt(non_empty_corporation_count)
+                                    tr
+                                        td Empty player corporations
+                                        td.text-right= fmt(empty_corporation_count)
+                div.col-md-6.mb-3
+                    div.card.h-100
+                        div.card-body
+                            h2.h5 Alliances and Characters
+                            table.table.table-striped.table-sm.mb-0
+                                tbody
+                                    tr
+                                        td Alliances with corporations
+                                        td.text-right= fmt(populated_alliance_count)
+                                    tr
+                                        td Empty alliances
+                                        td.text-right= fmt(empty_alliance_count)
+                                    tr
+                                        td Characters in alliances
+                                        td.text-right= fmt(characters_in_alliances_count)
+                                    tr
+                                        td Unaffiliated characters
+                                        td.text-right= fmt(unaffiliated_character_count)
+                                    tr
+                                        td Characters with history imported
+                                        td.text-right= fmt(history_complete_count)
+                                    tr
+                                        td Characters pending history import
+                                        td.text-right= fmt(history_pending_count)
+                                    tr
+                                        td Characters with recent change flag
+                                        td.text-right= fmt(recent_change_count)
