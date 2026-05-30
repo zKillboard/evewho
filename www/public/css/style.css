@@ -24,6 +24,20 @@ html { overflow-y: scroll; }
 .delta-table tbody tr td.count { width: 90px; }
 .delta-table tbody tr td.delta { width: 60px; }
 
+.stats-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.stats-table-numeric td:first-child {
+  width: 100%;
+}
+
+.stats-table-numeric td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .dates {
   float: right;
   min-width: 135px;
