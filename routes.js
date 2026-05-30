@@ -11,7 +11,17 @@ async function doStuff(req, res, next, controllerFile, pugFile) {
     let result = await controller(req, res);
 
     if (result === null || result === undefined) { 
+      const isApiLike = req.path.startsWith('/api/') || req.path.startsWith('/list/') || req.xhr;
+      if (isApiLike) {
         res.sendStatus(404);
+      } else {
+        const server_started = (req.app && req.app.app && req.app.app.server_started) || Date.now();
+        res.status(404).render('404.pug', {
+          requested_path: req.originalUrl,
+          title: 'Not Found',
+          server_started
+        });
+      }
     } else if (typeof result === "object") {
       if (result.json !== undefined) res.json(result.json);
       else res.render(pugFile, result);

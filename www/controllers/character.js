@@ -19,7 +19,14 @@ async function getData(req, res) {
 		if (details.length > 0) return '/character/' + details[0].character_id;
 	}
 
-	if (details.length == 0) return { package: {} };;
+	if (details.length == 0) {
+		return {
+			status_code: 404,
+			view: '404.pug',
+			package: { title: 'Not Found', requested_path: req.originalUrl },
+			ttl: 60
+		};
+	}
 
 	o.details = details[0];
 	o.history = await app.mysql.query(
