@@ -65,10 +65,11 @@ async function syncAllianceHistory(app, corp_id) {
             const body = await res.json();
             for (let i = 0; i < body.length; i++) {
                 const row = body[i];
+                if (!row.alliance_id) continue;
                 const startDate = row.start_date ? row.start_date.replace('T', ' ').replace('Z', '') : null;
                 await app.mysql.query(
                     'replace into ew_corporation_alliance_history (corporation_id, record_id, alliance_id, is_deleted, start_date) values (?, ?, ?, ?, ?)',
-                    [corp_id, row.record_id, row.alliance_id || 0, row.is_deleted ? 1 : 0, startDate]
+                    [corp_id, row.record_id, row.alliance_id, row.is_deleted ? 1 : 0, startDate]
                 );
             }
 
