@@ -1,5 +1,5 @@
 module.exports = {
-	paths: '/pug/list/alliance/current/:id/:page',
+	paths: '/list/alli/corp/current/:id/:page',
 	get: getData
 }
 
@@ -25,7 +25,7 @@ async function getData(req, res) {
 
 	return {
 		package: { characters: result, entity_type: 'corporation' },
-		view: 'puglist.pug',
+		view: 'history_rows.pug',
 		ttl: 86400  // 1 day
 	};
 }

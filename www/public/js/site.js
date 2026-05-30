@@ -110,9 +110,9 @@ function loadNextPage(event) {
         tbody = $(tbody[0]);
       let listId = tbody.attr('list_id');
       let listScope = tbody.attr('list_scope');
-      let url = '/pug/list/' + listId + '/' + which + '/' + page;
+      let url = '/list/corp/char/' + which + '/' + listId + '/' + page;
       if (listScope == 'alliance') {
-        url = '/pug/list/alliance/' + which + '/' + listId + '/' + page;
+        url = '/list/alli/corp/' + which + '/' + listId + '/' + page;
       }
         console.log(url);
         $.get(url, function(data) { addHistoryData(tbody, data); });

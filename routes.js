@@ -44,10 +44,12 @@ addGet('/pilot/:id', 'character');
 addGet('/corp/:id', 'corporation');
 addGet('/alli/:id', 'alliance');
 
-addGet('/pug/list/:id/:which/:page', 'puglist');
-addGet('/pug/list/alliance/current/:id/:page', 'puglist_alliance_current', 'puglist');
-addGet('/pug/list/alliance/joined/:id/:page', 'puglist_alliance_joined', 'puglist');
-addGet('/pug/list/alliance/departed/:id/:page', 'puglist_alliance_departed', 'puglist');
+addGet('/list/corp/char/current/:id/:page', 'corp_char_current', 'history_rows');
+addGet('/list/corp/char/joined/:id/:page', 'corp_char_joined', 'history_rows');
+addGet('/list/corp/char/departed/:id/:page', 'corp_char_departed', 'history_rows');
+addGet('/list/alli/corp/current/:id/:page', 'alli_corp_current', 'history_rows');
+addGet('/list/alli/corp/joined/:id/:page', 'alli_corp_joined', 'history_rows');
+addGet('/list/alli/corp/departed/:id/:page', 'alli_corp_departed', 'history_rows');
 addGet('/api/:type/:id', 'api');
 
 // Redirects for old evewho
