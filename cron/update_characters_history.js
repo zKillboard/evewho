@@ -15,7 +15,7 @@ async function runInBackground(app) {
 	if (app.util.isDowntime()) return;
 
 	try {
-		let chars = await app.mysql.query('select character_id, name, corporation_id from ew_characters where name != "" and history_added = 0 limit 1');
+		let chars = await app.mysql.query('select character_id, name, corporation_id from ew_characters where name != "" and history_added = 0 limit 2');
 		for (let i = 0; i < chars.length; i++) {
 			if (app.pause420 == true) break;
 			if (app.error_count > 0) break;
