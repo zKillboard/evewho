@@ -45,6 +45,9 @@ addGet('/corp/:id', 'corporation');
 addGet('/alli/:id', 'alliance');
 
 addGet('/pug/list/:id/:which/:page', 'puglist');
+addGet('/pug/list/alliance/current/:id/:page', 'puglist_alliance_current', 'puglist');
+addGet('/pug/list/alliance/joined/:id/:page', 'puglist_alliance_joined', 'puglist');
+addGet('/pug/list/alliance/departed/:id/:page', 'puglist_alliance_departed', 'puglist');
 addGet('/api/:type/:id', 'api');
 
 // Redirects for old evewho

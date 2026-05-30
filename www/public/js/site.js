@@ -75,7 +75,7 @@ $(document).ready(function() {
     $("#charsbar a").on('click', changeWhich);
 
     let tbody = $('#char-tbody');
-    if (tbody.length && tbody.attr('corp_id') == undefined) $('#loadMore').remove();
+    if (tbody.length && tbody.attr('list_id') == undefined) $('#loadMore').remove();
 
     loadNextPage();
 
@@ -106,9 +106,14 @@ function loadNextPage(event) {
     let which = $("#charsbar .active").attr('which');
     let tbody = $('#char-tbody');
 
-    if (tbody.length && tbody.attr('corp_id') != undefined) {
+    if (tbody.length && tbody.attr('list_id') != undefined) {
         tbody = $(tbody[0]);
-        let url = '/pug/list/' + tbody.attr('corp_id') + '/' + which + '/' + page;
+      let listId = tbody.attr('list_id');
+      let listScope = tbody.attr('list_scope');
+      let url = '/pug/list/' + listId + '/' + which + '/' + page;
+      if (listScope == 'alliance') {
+        url = '/pug/list/alliance/' + which + '/' + listId + '/' + page;
+      }
         console.log(url);
         $.get(url, function(data) { addHistoryData(tbody, data); });
     }

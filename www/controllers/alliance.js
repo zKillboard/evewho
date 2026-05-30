@@ -21,8 +21,9 @@ async function getData(req, res) {
 	if (details.length == 0) return undefined;
 
 	o.details = details[0];
-	o.corporations = await app.mysql.query('select corporation_id id, name, memberCount, diff from ew_corporations where alliance_id = ? order by name', req.params.id);
-	o.details.corp_count = o.corporations.length
+	o.corporations = [];
+	const corp_count = await app.mysql.query('select count(*) corp_count from ew_corporations where alliance_id = ?', req.params.id);
+	o.details.corp_count = corp_count[0].corp_count;
 
 	if (o.details.memberCount > 0 && o.details.executor_corp > 1) {
 		const exec_corp = await app.mysql.query('select corporation_id, name from ew_corporations where corporation_id = ?', o.details.executor_corp);

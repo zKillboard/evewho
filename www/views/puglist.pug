@@ -2,12 +2,13 @@ include details.pug
 include history.pug
 include image.pug
 
+- const rowType = entity_type || 'character';
 each val in characters
     tr
         td.image
-            +image('character', val.id, 64, val.name)
+            +image(rowType, val.id, 64, val.name)
         td.name
-            a(href='/character/' + val.id)= val.name
+            a(href='/' + rowType + '/' + val.id)= val.name
         td
           span.dates.align-right.departed= val.end_date
           br

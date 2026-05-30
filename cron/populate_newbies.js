@@ -9,6 +9,8 @@ const entity = require('../classes/entity.js');
 let max_char_id = undefined;
 
 async function f(app) {
+	if (process.env.NODE_ENV == 'dev') return;
+	
     try {
         if (max_char_id === undefined) {
             max_char_id = await app.mysql.queryField('char_id', 'select max(character_id) char_id from ew_characters where character_id > 2112000000 and character_id < 2200000000');

@@ -1,10 +1,10 @@
 include image.pug
 
-mixin history(title, type, contents, joined, left, corp_id)
+mixin history(title, type, contents, joined, left, list_id, list_scope)
   span.float-left.table-responsive
     h4= title 
 
-    if (corp_id > 0) 
+    if (list_id > 0) 
       nav.navbar.navbar-expand.navbar-light.bg-light
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#charsbar', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
           span.navbar-toggler-icon
@@ -29,7 +29,7 @@ mixin history(title, type, contents, joined, left, corp_id)
           th.joined.align-right
             if !left && joined
                 | Joined
-      tbody(corp_id = corp_id)#char-tbody
+      tbody(list_id = list_id, list_scope = list_scope)#char-tbody
         if contents != undefined
           each val in contents
             tr
