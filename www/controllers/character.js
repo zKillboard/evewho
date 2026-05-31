@@ -39,7 +39,7 @@ async function getData(req, res) {
 				when cah.alliance_id > 0 then concat(cah.alliance_id, ':', coalesce(al.name, ''))
 				else null
 			end
-			order by cah.start_date
+			order by cah.start_date desc
 			separator '||'
 		) alliances
 		from ew_history eh
