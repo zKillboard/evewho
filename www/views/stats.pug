@@ -68,6 +68,12 @@ block content
                                         td w/ Alliance
                                         td.text-right= fmt(characters_in_alliances_count)
                                     tr
+                                        td In NPC corps
+                                        td.text-right= fmt(characters_in_npc_corporations_count)
+                                    tr
+                                        td In non-NPC corps
+                                        td.text-right= fmt(characters_in_non_npc_corporations_count)
+                                    tr
                                         td w/ Faction
                                         td.text-right= fmt(faction_character_count)
                                     tr
@@ -98,6 +104,9 @@ block content
                                         td w/ Faction
                                         td.text-right= fmt(faction_corporation_count)
                                     tr
+                                        td Chars in faction corps
+                                        td.text-right= fmt(characters_in_faction_corporations_count)
+                                    tr
                                         td w/ Alliance
                                         td.text-right= fmt(allied_corporation_count)
                                     tr
@@ -122,11 +131,20 @@ block content
                             table.table.table-striped.table-sm.mb-0.stats-table.stats-table-numeric
                                 tbody
                                     tr
-                                        td w/ Corporations
+                                        td Open
                                         td.text-right= fmt(populated_alliance_count)
+                                    tr
+                                        td Characters total
+                                        td.text-right= fmt(characters_in_alliances_count)
+                                    tr
+                                        td Chars in faction alliances
+                                        td.text-right= fmt(characters_in_faction_alliances_count)
                                     tr
                                         td w/ Faction
                                         td.text-right= fmt(faction_alliance_count)
+                                    tr
+                                        td Activity
+                                        td.text-right= fmt(alliance_activity_score, 2)
                                     tr
                                         td Closed
                                         td.text-right= fmt(empty_alliance_count)
