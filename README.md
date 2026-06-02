@@ -26,15 +26,22 @@ GET https://evewho.com/api/character/1633218082
 
 # Corporation member list
 GET https://evewho.com/api/corplist/98330748
+GET https://evewho.com/api/corplist/98330748/page/2
 
 # Alliance member list
 GET https://evewho.com/api/allilist/99006319
+GET https://evewho.com/api/allilist/99006319/page/2
 
 # Corporation member change histories
 GET https://evewho.com/api/corpdeparted/98330748
+GET https://evewho.com/api/corpdeparted/98330748/page/2
 GET https://evewho.com/api/corpjoined/98330748
+GET https://evewho.com/api/corpjoined/98330748/page/2
 
 ```
+
+List endpoints return a `pagination` object with `page`, `limit`, `total`,
+`pages`, `has_next`, and `has_previous`. Pages contain 500 rows.
 
 ### Rate Limiting
 
