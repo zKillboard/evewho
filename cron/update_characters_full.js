@@ -15,7 +15,8 @@ async function f(app) {
 	let awaits = [];
     for (let i = 0; i < chars.length; i++) {
         await app.mysql.query('update ew_characters set lastUpdated = now() where character_id = ?', chars[i].character_id);
-        if (chars[i].corporation_id == 1000001) {
+		if (chars[i].corporation_id == 1000001) {
+			await app.mysql.query('update ew_characters set recent_change = 0 where character_id = ?', chars[i].character_id);
             continue;
         }
 		

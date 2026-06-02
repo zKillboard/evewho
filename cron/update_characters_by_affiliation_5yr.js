@@ -65,11 +65,11 @@ async function parse(app, res, map) {
             }
 
             if (info.corporation_id != prev.corporation_id || info.alliance_id != prev.alliance_id || info.faction_id != prev.faction_id) {
-                if (info.corporation_id == 1000001) {
-                    await app.mysql.query('update ew_characters set corporation_id = 1000001, alliance_id = 0, faction_id = 0 where character_id = ?', [char_id]);
-                }
-                else await app.mysql.query('update ew_characters set recent_change = 1, history_added = 0, corporation_id = ?, alliance_id = ?, faction_id = ? where character_id = ?', [info.corporation_id, info.alliance_id, info.faction_id, char_id]);
-
+				if (info.corporation_id == 1000001) {
+					await app.mysql.query('update ew_characters set corporation_id = 1000001, alliance_id = 0, faction_id = 0 where character_id = ?', [char_id]);
+				} else {
+					await app.mysql.query('update ew_characters set recent_change = 1, history_added = 0, corporation_id = ?, alliance_id = ?, faction_id = ? where character_id = ?', [info.corporation_id, info.alliance_id, info.faction_id, char_id]);
+				}
             } else if (info.corporation_id != 1000001) {
                 // Double check latest history entry matches current corporation
                 var lastCorpRow = await app.mysql.query('select corporation_id from ew_history where character_id = ? order by start_date desc limit 1', char_id);

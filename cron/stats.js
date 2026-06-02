@@ -82,7 +82,7 @@ async function f(app) {
         largest_alliance_members: stats.largest_alliance_members || 0
 	};
 	
-	console.log('[' + new Date().toISOString() + '] Stats generated:', payload);
+	console.log('[' + new Date().toISOString() + '] Stats generated');
 
     await app.redis.set('stats:summary', JSON.stringify(payload));
 }
