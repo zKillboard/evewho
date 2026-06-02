@@ -11,7 +11,7 @@ async function get(req, res) {
 	// Handle URL-encoded names (e.g., "John+Doe" -> "John Doe")
 	const name = utf8.encode(req.params.name.replace(/\+/g, ' '));
 	
-	const charaacter = await app.mysql.query('SELECT * FROM ew_characters WHERE name = ?', [name]);
+	const charaacter = await app.mysql.query('SELECT * FROM ew_characters WHERE name = ? order by corporation_id desc', [name]);
 	if (charaacter.length === 0) {
 		return {
 			status_code: 404,
