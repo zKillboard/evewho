@@ -21,7 +21,7 @@ async function f(app) {
         }
 		
 		let url = 'https://esi.evetech.net/characters/' + chars[i].character_id;
-		const res = await fetch(url, HEADERS);
+		const res = fetch(url, HEADERS);
 
 		awaits.push(characters.parse(app, res, chars[i].character_id, url));		
 	}

@@ -1,6 +1,7 @@
 
 let parse = async function(app, res, char_id, url) {
 	try {
+		res = await res;
 		if (res.status == 404) {
 			await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
 		}
