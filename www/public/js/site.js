@@ -6,6 +6,24 @@ $(document).ready(function() {
 
     setInterval(setTopBannerHeight, 10000); 
 
+    $('#autocomplete').on('paste', function(event) {
+      const clipboardData = event.originalEvent.clipboardData || window.clipboardData;
+      if (!clipboardData) return;
+
+      event.preventDefault();
+
+      const input = this;
+      const pastedText = clipboardData.getData('text').trim();
+      const start = typeof input.selectionStart === 'number' ? input.selectionStart : input.value.length;
+      const end = typeof input.selectionEnd === 'number' ? input.selectionEnd : input.value.length;
+
+      input.value = input.value.slice(0, start) + pastedText + input.value.slice(end);
+
+      const cursorPosition = start + pastedText.length;
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      $(input).trigger('input').trigger('keyup');
+    });
+
     $('#autocomplete').autocomplete({
       autoSelectFirst: true,
       serviceUrl: function(query) {
