@@ -9,7 +9,7 @@ $(document).ready(function() {
     $('#autocomplete').autocomplete({
       autoSelectFirst: true,
       serviceUrl: function(query) {
-        return '/autocomplete/' + encodeURIComponent(query.trim().toLowerCase());
+        return '/autocomplete/' + encodeURIComponent(query.trimStart().toLowerCase());
       },
       ajaxSettings: {
         type: 'GET',
