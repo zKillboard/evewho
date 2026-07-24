@@ -9,7 +9,7 @@ async function getData(req, res) {
 	let offset = 250 * (req.params.page - 1);
 	if (offset < 0 || offset > 10000) return { package: { characters: [], entity_type: 'corporation' }, ttl: 86400 };
 
-	const query = 'select h.corporation_id id, c.name, date_format(h.start_date, "%Y/%m/%d %H:%i") start_date, date_format(h.end_date, "%Y/%m/%d %H:%i") end_date from ew_corporation_alliance_history h left join ew_corporations c on h.corporation_id = c.corporation_id where h.alliance_id = ? and h.end_date is not null order by h.end_date desc limit 250 offset ?';
+	const query = 'select h.corporation_id id, c.name, c.memberCount, date_format(h.start_date, "%Y/%m/%d %H:%i") start_date, date_format(h.end_date, "%Y/%m/%d %H:%i") end_date from ew_corporation_alliance_history h left join ew_corporations c on h.corporation_id = c.corporation_id where h.alliance_id = ? and h.end_date is not null order by h.end_date desc limit 250 offset ?';
 	let result = await app.mysql.query(query, [req.params.id, offset]);
 
 	return {
