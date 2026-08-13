@@ -6,7 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "fundamen": "^0.4.3",
+    "fundamen": "^0.4.4",
     "mysql2": "^3.0.0"
   }
 }
