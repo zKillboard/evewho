@@ -12,8 +12,8 @@ async function getData(req, res) {
 	let details = await app.mysql.query('select * from ew_alliances where alliance_id = ?', req.params.id);
 	if (details.length == 0) {
 		req.params.id = utf8.encode(req.params.id.replace(/\+/g, ' '));
-		details = await app.mysql.query('select alliance_id from ew_alliances where name = ?', req.params.id);
-		if (details.length == 0) details = await app.mysql.query('select alliance_id from ew_alliances where name = ?', req.params.id + '.');
+		details = await app.mysql.query('select alliance_id from ew_alliances where name = CONVERT(? USING latin1)', [req.params.id]);
+		if (details.length == 0) details = await app.mysql.query('select alliance_id from ew_alliances where name = CONVERT(? USING latin1)', [req.params.id + '.']);
 		if (details.length > 0) return '/alliance/' + details[0].alliance_id;
 
 	}

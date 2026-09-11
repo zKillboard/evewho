@@ -14,8 +14,8 @@ async function getData(req, res) {
 
 	if (details.length == 0) {
 		req.params.id = utf8.encode(req.params.id.replace(/\+/g, ' '));
-		details = await app.mysql.query('select corporation_id from ew_corporations where name = ?', req.params.id);
-		if (details.length == 0) details = await app.mysql.query('select corporation_id from ew_corporations where name = ?', req.params.id + '.');
+		details = await app.mysql.query('select corporation_id from ew_corporations where name = CONVERT(? USING latin1)', [req.params.id]);
+		if (details.length == 0) details = await app.mysql.query('select corporation_id from ew_corporations where name = CONVERT(? USING latin1)', [req.params.id + '.']);
 		if (details.length > 0) return '/corporation/' + details[0].corporation_id;
 	}
 
