@@ -7,24 +7,31 @@ const { HEADERS } = require('../classes/constants.js');
 const entity = require('../classes/entity.js');
 
 async function f(app) {
-    let corps = await app.mysql.query('select corporation_id from ew_corporations order by lastUpdated limit 5');
+    // Locked rows remain oldest until a successful refresh, so fetch extra candidates.
+    let corps = await app.mysql.query('select corporation_id from ew_corporations order by lastUpdated limit 25');
+    const checks = [];
     for (let i = 0; i < corps.length; i++ ){
+        if (checks.length >= 5) break;
         if (app.bailout == true || app.pause420 == true) break;
         if (app.error_count > 0) break;
         if (app.util.isDowntime()) break;
 
         let row = corps[i];
         let corp_id = row.corporation_id;
-        await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', corp_id);
 		if (await app.redis.set('check:' + corp_id, corp_id, 'nx', 'ex', 300) == null) { console.log('skipping corp', corp_id); continue; }
-
-		let url = 'https://esi.evetech.net/corporations/' + corp_id;
-		const res = await fetch(url, HEADERS);
-		
-		await parse(app, res, corp_id, url);
-
-        await app.sleep(1000);
+		checks.push(checkCorporation(app, corp_id));
     }
+
+    const results = await Promise.allSettled(checks);
+    const failed = results.find(result => result.status == 'rejected');
+    if (failed) throw failed.reason;
+}
+
+async function checkCorporation(app, corp_id) {
+	let url = 'https://esi.evetech.net/corporations/' + corp_id;
+	const res = await fetch(url, HEADERS);
+
+	await parse(app, res, corp_id, url);
 }
 
 async function parse(app, res, corp_id, url) {
@@ -44,6 +51,10 @@ async function parse(app, res, corp_id, url) {
             app.error_count++;
 			if (res.status != 502) console.log(res.status + ' ' + url);
             setTimeout(function() { app.error_count--; }, 1000);
+
+			if (res.status == 404) {
+				await app.mysql.query('update ew_corporations set lastUpdated = now() where corporation_id = ?', corp_id);
+			}
 
 			if (res.status == 420) {
                 app.pause420 = true;
