@@ -3,7 +3,20 @@ let parse = async function(app, res, char_id, url) {
 	try {
 		res = await res;
 		if (res.status == 404) {
-			await app.mysql.query('update ew_characters set lastUpdated = now(), recent_change = 0 where character_id = ?', [char_id]);
+			const fallbackName = `Character ${char_id}`;
+			await app.mysql.query(`
+				update ew_characters
+				set name_phonetic = if(name = '', soundex(?), name_phonetic),
+					name = if(name = '', ?, name),
+					history_added = 1,
+					lastUpdated = now(),
+					lastNameUpdate = now(),
+					recent_change = 0,
+					faction_id = 0,
+					alliance_id = 0,
+					corporation_id = 1000001
+				where character_id = ?
+			`, [fallbackName, fallbackName, char_id]);
 		}
         else if (res.status == 200) {
 			var body = await res.json();
@@ -21,20 +34,6 @@ let parse = async function(app, res, char_id, url) {
         } else {
             app.error_count++;
             setTimeout(function() { app.error_count--; }, 1000);
-			if (res.status == 404) {
-                var body = JSON.parse(res.body);
-                if (body.error == 'Character has been deleted!') {
-                    let r = await app.mysql.query('update ew_characters set history_added = 1, lastUpdated = now(), recent_change = 0, faction_id = 0, alliance_id = 0, corporation_id = 1000001 where character_id = ?', [char_id]);
-                    return await app.sleep(10000);
-                }
-            }
-			if (res.status == 404) {
-                // Get the name, if we have a name then this is a false 404, otherwise remove it
-                let name = await app.mysql.queryField('name', 'select name from ew_characters where character_id = ?', [char_id]);
-                if (name !== null && name !== undefined && name.length > 0) return;
-                console.log('Received valid 404 for ' + char_id);
-                await app.mysql.query('delete from ew_characters where character_id = ?', [char_id]);
-            }
 			if (res.status != 502) console.log(res.status + ' ' + url);
 
 			if (res.status == 420) {
