@@ -73,7 +73,7 @@ async function syncAllianceHistory(app, corp_id) {
             }
 
             await app.mysql.query(
-                'with x as (select record_id, lead(start_date) over (partition by corporation_id order by record_id) next_start_date from ew_corporation_alliance_history where corporation_id = ?) update ew_corporation_alliance_history h join x on x.record_id = h.record_id set h.end_date = x.next_start_date where h.corporation_id = ? and not (h.end_date <=> x.next_start_date);',
+                'with x as (select record_id, lead(start_date) over (partition by corporation_id order by start_date, record_id) next_start_date from ew_corporation_alliance_history where corporation_id = ?) update ew_corporation_alliance_history h join x on x.record_id = h.record_id set h.end_date = x.next_start_date where h.corporation_id = ? and not (h.end_date <=> x.next_start_date);',
                 [corp_id, corp_id]
             );
         } else {
